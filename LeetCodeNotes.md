@@ -3164,3 +3164,185 @@ public:
 };
 ```
 
+
+
+## 回溯算法
+
+### 组合
+
+[77. 组合](https://leetcode-cn.com/problems/combinations/)
+
+标准回溯问题
+
+```c++
+class Solution {
+public:
+    vector<vector<int>> res;
+    vector<int> temp;
+    vector<vector<int>> combine(int n, int k) {
+        traverse(n,k,1);
+        return res;
+    }
+    void traverse(int n,int k,int index){
+        if(temp.size () == k) {
+            res.push_back(temp);
+            return;
+        }
+        for(int i = index;i <= n;i++){
+            temp.push_back(i);
+            traverse(n, k ,i+1);
+            temp.pop_back();
+        }
+    }
+    
+    //优化
+        void traverse(int n,int k,int index){
+        if(temp.size () == k) {
+            res.push_back(temp);
+            return;
+        }
+        for(int i = index;i <= n-(k-temp.size())+1;i++){
+            temp.push_back(i);
+            traverse(n, k ,i+1);
+            temp.pop_back();
+        }
+    }
+};
+```
+
+### 组合总和III
+
+[216. 组合总和 III](https://leetcode-cn.com/problems/combination-sum-iii/)
+
+```c++
+class Solution {
+public:
+    vector<vector<int>> res;
+    vector<int> temp;
+    vector<vector<int>> combinationSum3(int k, int n) {
+        traverse(9, k, 1, n);
+        return res;
+    }
+    void traverse(int n, int k, int index, int remain){
+        if(temp.size() == k && remain == 0) {
+            res.push_back(temp);
+            return;
+        }
+        if(remain < 0 ) return;
+        for(int i = index; i<=n;i++){
+            temp.push_back(i);
+            traverse(n,k,i+1,remain - i);
+            temp.pop_back();
+        }
+    }
+};
+```
+
+### 电话号码的字母组合
+
+[17. 电话号码的字母组合](https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/)
+
+多个for的回溯问题
+
+```c++
+class Solution {
+public:
+    string str = "";
+    vector<string> vecmap = {"abc","def","ghi","jkl","mno","pqrs","tuv","wxyz"};
+    vector<string> res;
+    string temp = "";
+    int len = 0;
+    vector<string> letterCombinations(string digits) {
+        len = digits.size();
+        if(len == 0) return res;
+        traverse(digits, 0);
+        return res;
+    }
+    void traverse(string &digits, int index) {
+        if (index == len) {
+            res.push_back(temp);
+            return;
+        }
+        int d = digits[index] - '0';
+        string letter = vecmap[d - 2];
+        for(int i = 0;i < letter.size();i++){
+            temp.push_back(letter[i]);
+            traverse(digits,index+1);
+            temp.pop_back();
+        }
+    }
+};
+```
+
+### 组合总和
+
+[39. 组合总和](https://leetcode-cn.com/problems/combination-sum/)
+
+元素可以重复出现
+
+```c++
+class Solution {
+public:
+    vector<int> temp;
+    vector<vector<int>> res;
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        traverse(candidates,0 ,target);
+        return res;
+    }
+    void traverse(vector<int> &candidates, int index, int remain) {
+        if(remain == 0) {
+            res.push_back(temp);
+            return;
+        }
+        if(remain < 0) return;
+        for(int i = index; i < candidates.size(); i++){
+            temp.push_back(candidates[i]);
+            traverse(candidates, i, remain - candidates[i]);  // i 不是index, 不是i+1
+            temp.pop_back();
+        }
+    }
+};
+```
+
+
+
+### 组合总和II
+
+[40. 组合总和 II](https://leetcode-cn.com/problems/combination-sum-ii/)
+
+这里的结果中元素不能重复出现，但candidates中有重复的元素，并且最终结果中不能有重复的集合
+
+对于不重复的集合，如果candidates中元素不重复，则直接使用i+1进行遍历即可。
+
+如果有重复的元素，则对于相同的元素，在当前区间中我们只作为【初始候选】一次，得到的结果就是不重复的。
+
+排除相同的元素，我们只需要排序，然后判断即可。
+
+```c++
+class Solution {
+public:
+    vector<int> temp;
+    vector<vector<int>> res;
+    // map<int,int> cnt;
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        sort(candidates.begin(),candidates.end());
+        traverse(candidates, 0, target);
+        return res;
+    }
+
+    void traverse(vector<int> &candidates, int index, int remain) {
+        if(remain == 0) {
+            res.push_back(temp);
+            return;
+        }
+        if(remain < 0) return;
+        for(int i = index; i < candidates.size(); i++){
+            if(i!= index && candidates[i] == candidates[i-1]) continue;
+                temp.push_back(candidates[i]);
+                traverse(candidates, i+1, remain - candidates[i]);  // i 不是index, 不是i+1
+                temp.pop_back();
+        }
+    }
+}
+```
+
