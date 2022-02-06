@@ -2822,8 +2822,6 @@ public:
 
 对于任意的二叉树而言，我们只需要统计二叉树的元素出现的次数即可
 
-对于二叉搜索树而言，
-
 ```c
 // 任意二叉树
 class Solution {
@@ -2849,6 +2847,319 @@ public:
         cntmap[root->val]++;
         traverse(root->left);
         traverse(root->right);
+    }
+};
+```
+
+### 二叉树的最近公共祖先
+
+[236. 二叉树的最近公共祖先](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-tree/)
+
+【递归法】
+
+完全使用递归，对于某一层，
+
+- 如果当前结点等于p或者q，或者为null则返回该结点
+- 如果都是所要找的结点，则需要寻找当前结点是否是最近公共祖先，所以看左子树或者右子树中是否存在p或者q节点
+    - 如果左右子树返回的都不为null，则说明root为最近祖先（最先返回的root的会一直被返回）
+    - 某一个为空，说明另一个返回的就为最近祖先
+
+【常规】
+
+用栈记录从root到p 以及 root到q的路径
+
+出栈到栈的大小一致后，共同出栈，找到公共祖先即可
+
+【注意】这里有一个递归遍历单边的方式
+
+```c++
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        if(root == p || root == q || root == NULL) return root;
+        TreeNode *left = lowestCommonAncestor(root->left, p , q);
+        TreeNode *right = lowestCommonAncestor(root->right, p , q);
+        if(left && right) return root;
+        else if(left && !right) return left;
+        else if(!left && right) return right;
+        return NULL;
+    }
+
+};
+
+//stack
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        stack<TreeNode *> m1;
+        stack<TreeNode *> m2;
+        getpath(root,p,m1);
+        getpath(root,q,m2);
+        while(m1.size() != m2.size())
+        {
+            if(m1.size() > m2.size())
+                m1.pop();
+            else
+                m2.pop();
+        }
+        while(m1.top() != m2.top())
+        {
+            m1.pop();
+            m2.pop();
+        }
+        return m1.top();
+    }
+
+    bool getpath(TreeNode* root,TreeNode* node,stack<TreeNode*>& path)
+    {
+        if(root == NULL)
+            return false;
+        path.push(root);
+        if(root == node)
+            return true;
+        if(getpath(root->left,node,path))  // 递归遍历单边，使用bool返回值
+            return true;
+        if(getpath(root->right,node,path))
+            return true;
+        path.pop();
+        return false;       
+    }
+};
+
+```
+
+### 二叉搜索树中的插入操作
+
+[701. 二叉搜索树中的插入操作](https://leetcode-cn.com/problems/insert-into-a-binary-search-tree/)
+
+这里也是用单边遍历的方式，如果在某一侧插入，则另一边就不需要再遍历。
+
+插入的结点一定是在叶子结点或者是某一侧是空的结点上。
+
+然后再遍历的过程中进行判断即可。
+
+```c++
+class Solution {
+public:
+    TreeNode* insertIntoBST(TreeNode* root, int val) {
+        if(root == nullptr) {
+            TreeNode *node = new TreeNode(val);
+            return node;
+        }
+        traverse(root,val);
+        return root;
+    }
+    bool traverse(TreeNode *root, int val) {
+        if(root == nullptr) return false;
+        if(root->left == nullptr || root->right == nullptr) {
+            TreeNode *node = new TreeNode(val);
+            if(val < root->val && root->left == nullptr){
+                root->left = node;
+                return true;
+            } 
+            if(val >= root->val && root->right == nullptr) {
+                root->right = node;
+                return true;
+            }
+            
+        }
+        if(root->val > val) {
+            if(traverse(root->left,val)) return true;
+        }
+        if(root->val <= val) {
+            if(traverse(root->right,val)) return true;
+        }
+        return false;
+    }
+        //         8
+        //     x     55
+        //        39    x
+        //     11   x
+        //   x    23
+        //       x  x  
+
+    //     5
+    // x       14
+    //      10    77
+    //     x  x  x  95 
+};
+```
+
+### 删除二叉搜索树中的节点
+
+[450. 删除二叉搜索树中的节点](https://leetcode-cn.com/problems/delete-node-in-a-bst/)
+
+这里由于设计二叉搜索树的调正，所以我的想法是，把key结点删除之后，把key结点的子节点通过遍历的方式插入子树中。
+
+在上面已经写过二叉搜索树的插入，这里还要注意的就是删除根节点的情况。
+
+如果是删除根节点，则把左子树插入右子树中，或者把右子树插入左子树中即可。
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode *rootNode;
+    TreeNode* deleteNode(TreeNode* root, int key) {
+        if(root == nullptr) return root;
+        if(root->val == key) {
+            if(root->right == nullptr) {
+                rootNode = root->left;
+                subTree(root->right);
+                return root->left;
+            }else{
+                rootNode = root->right;
+                subTree(root->left);
+                return root->right;
+            }
+        }
+        rootNode = root;
+        adjust2(root,key,nullptr);
+        return root;
+
+    }
+    bool adjust2(TreeNode *root, int key, TreeNode *pre){
+        if(root == nullptr) return false;
+        if(root->val == key) {
+            if(pre->left == root) {
+                pre->left = nullptr;
+            }else {
+                pre->right = nullptr;
+            } 
+            subTree(root->left);
+            subTree(root->right);
+        }
+        if(adjust2(root->left,key,root)) return true;
+        if(adjust2(root->right, key, root)) return true;
+        return false;
+    }
+    
+    void subTree(TreeNode* node) {
+        if(node == nullptr) return;
+        TreeNode *t = new TreeNode(node->val);
+        insert(rootNode, t);
+        subTree(node->left);
+        subTree(node->right);   
+    }
+
+    bool insert(TreeNode *root, TreeNode *node) {
+        if(root == nullptr) return false;
+        if(root->left == nullptr || root->right == nullptr) {
+            if(node->val < root->val && root->left == nullptr){
+                root->left = node;
+                return true;
+            } 
+            if(node->val >= root->val && root->right == nullptr) {
+                root->right = node;
+                return true;
+            }
+            
+        }
+        if(root->val > node->val) {
+            if(insert(root->left,node)) return true;
+        }
+        if(root->val <= node->val) {
+            if(insert(root->right,node)) return true;
+        }
+        return false;
+    }
+};
+```
+
+### 修剪二叉树
+
+[669. 修剪二叉搜索树](https://leetcode-cn.com/problems/trim-a-binary-search-tree/)
+
+对于[low, high]区间之外的点要删除，本来删除之后的结点的子树又涉及树的调整
+
+但是这里是搜索树，所以
+
+如果是小于low的结点，删除之后，该节点的左子树都小于low，则只需要对其右子树进行处理
+
+如果是大于high的结点，删除之后，该结点的右子树都大于high，则只需要对其左子树进行处理
+
+如果都在区间之内，则对左右子树进行处理
+
+然后返回处理后的结点
+
+```c++
+class Solution {
+public:
+    TreeNode* trimBST(TreeNode* root, int low, int high) {
+        if(root == nullptr) return root;
+        if(root->val < low) {
+            TreeNode *right = trimBST(root->right , low ,high);
+            return right;
+        }
+        if(root->val > high) {
+            TreeNode *left = trimBST(root->left , low, high);
+            return left;
+        }
+        root->left=trimBST(root->left,low,high);
+        root->right = trimBST(root->right,low,high);
+        return root;
+    }
+};
+```
+
+### 将有序数组转换为二叉搜索树
+
+[108. 将有序数组转换为二叉搜索树](https://leetcode-cn.com/problems/convert-sorted-array-to-binary-search-tree/)
+
+这里转换为一棵平衡的二叉搜索树，由前面的构造二叉树可知，中间位置为root，直接构造即可
+
+```c++
+class Solution {
+public:
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
+        return traverse(nums,0, nums.size()-1);
+    }
+    TreeNode* traverse(vector<int> &nums, int l, int r) {
+        if(l > r) return nullptr;
+        int len = (l+r)/2;
+        TreeNode *node = new TreeNode(nums[len]);
+        
+        node->left = traverse(nums, l ,len-1);
+        node->right = traverse(nums,len + 1, r);
+        return node;
+    }
+};
+```
+
+### 把二叉搜索树转换为累加树
+
+[538. 把二叉搜索树转换为累加树](https://leetcode-cn.com/problems/convert-bst-to-greater-tree/)
+
+累加树是指：
+
+使得树中每个结点的值＝原树中大于等于原值的结点的值的和
+
+所以即为右侧结点的和，所以我们先遍历右边节点，使用pre记录和即可。
+
+```c++
+class Solution {
+public:
+    TreeNode *pre = new TreeNode(0);
+    TreeNode* convertBST(TreeNode* root) {
+        traverse(root);
+        return root;
+    }
+    void traverse(TreeNode *root) {
+        if(root == nullptr) return;
+        traverse(root->right);
+        root->val += pre->val;
+        pre = root;
+        traverse(root->left);
     }
 };
 ```
