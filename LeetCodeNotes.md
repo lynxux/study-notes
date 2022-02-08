@@ -3346,3 +3346,296 @@ public:
 }
 ```
 
+### 分割回文串
+
+[131. 分割回文串](https://leetcode-cn.com/problems/palindrome-partitioning/)
+
+首先我们需要一个judge函数实现回文子串的判断（双指针）
+
+当当前分割是回文子串时，才进行下一个阶段的分割；
+
+当分割点已经超过字符串的长度，表明这次分割完成，把分割的结果放入res中
+
+```c
+class Solution {
+public:
+    vector<string> temp;
+    vector<vector<string>> res;
+    vector<vector<string>> partition(string s) {
+        traverse(s, 0);
+        return res;
+    }
+    void traverse(string &s,int index){
+        if(index >= s.size()) {
+            res.push_back(temp);
+            return;
+        }
+        for(int i = index; i < s.size(); i++){
+            if(judge(s,index,i)){
+                string str = s.substr(index, i - index + 1);
+                temp.push_back(str);
+                traverse(s, i+1);
+            	temp.pop_back();
+            }else {
+                continue;
+            }
+        }
+    }
+    bool judge(string &s, int start, int end){
+        for(int i = start, j = end; i < j; i++, j--){
+            if(s[i] != s[j]) return false;
+        }
+        return true;
+    }
+
+};
+```
+
+### 复原IP地址
+
+[93. 复原 IP 地址](https://leetcode-cn.com/problems/restore-ip-addresses/)
+
+有点类似分割回文子串问题，这里要在原字符串中插入"."，使得成为ip地址的形式
+
+也就是说要对原字符串进行改变（insert），所以最后还要erase
+
+同样的，我们需要一个judge函数，对分割的某一段是否合法进行判断
+
+只有当前分割合法的情况下，我们才进行下一个分割
+
+当分割点达到3个时，进行最后一部分是否合法的判断；如果合法就存进res
+
+```c++
+class Solution {
+public:
+    vector<string> res;
+    vector<string> restoreIpAddresses(string s) {
+        traverse(s, 0, 0);
+        return res;
+    }
+    void traverse(string &s,int index, int cntPoint){
+        if(cntPoint == 3) {
+            if(judge(s, index, s.size()-1)){
+                res.push_back(s);
+            }
+            return;
+        }
+        for(int i = index;i < s.size(); i++){
+            if(judge(s, index, i)) {
+                s.insert(s.begin()+i+1,'.');
+                traverse(s, i+2, cntPoint + 1);
+                s.erase(s.begin() + i + 1);
+            }else continue;
+        }
+    }
+    bool judge(string &s, int start, int end){
+        if(start > end) return false;
+        if (s[start] == '0' && start != end) { 
+                return false;
+        }
+        int num = 0;
+        for(int i = start; i <= end;i ++){
+            if(s[i] <'0' || s[i] > '9') return false;
+            num = num * 10 + (s[i] - '0');
+            if(num > 255) return false;
+        }
+        if(num < 0 || num > 255) return false;
+        return true;
+    }  
+};
+```
+
+### 子集
+
+[78. 子集](https://leetcode-cn.com/problems/subsets/)
+
+由于是返回该集合的所有子集，所以对于每一次迭代的结果都直接存入res中即可
+
+```c++
+class Solution {
+public:
+    vector<vector<int>> res;
+    vector<int> temp;
+    vector<vector<int>> subsets(vector<int>& nums) {
+        traverse(nums,0);
+        return res;
+    }
+    void traverse(vector<int> &nums, int index) {
+        // if(index > nums.size()){
+        //     return;
+        // }
+        res.push_back(temp);
+        for(int i = index;i < nums.size(); i++){ 
+            temp.push_back(nums[i]);
+            traverse(nums, i+1);
+            temp.pop_back();
+        }
+    }
+};
+```
+
+### 子集II
+
+[90. 子集 II](https://leetcode-cn.com/problems/subsets-ii/)
+
+集合中有重复的元素，但是结果中不能有重复的集合
+
+方法同组合总和III，只要排序过后，对重复的元素只作为初始候选一次即可。
+
+```c++
+class Solution {
+public:
+    vector<vector<int>> res;
+    vector<int> temp;
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        sort(nums.begin(), nums.end());
+        traverse(nums,0);
+        return res;
+    }
+    void traverse(vector<int> &nums, int index){
+        res.push_back(temp);
+        for(int i = index; i < nums.size(); i++){
+            if(i != index && nums[i] == nums[i-1]) continue;
+            temp.push_back(nums[i]);
+            traverse(nums, i+1);
+            temp.pop_back();
+        }
+    }
+};
+```
+
+### 递增子序列
+
+[491. 递增子序列](https://leetcode-cn.com/problems/increasing-subsequences/)
+
+这里也是序列中存在重复的元素，但是结果中不能存在重复的集合
+
+这里去重不能使用上面的方法，因为原序列不能进行排序
+
+所以我们要考虑重复的元素在什么情况下不能再被使用？
+
+【重复的元素在某一层的选择中，不能重复被使用】
+
+这样我们就要在每一层的遍历中进行去重，去重的方法很多，比如使用数组
+
+问题是这个数组应该在哪里被声明？在哪里被重置？
+
+在遍历的过程中，一次循环其实就是一层（都是一个元素或则第n个元素），所以我们只要在循坏之前声明数组，数组在下一层中就会自动被重置
+
+```c++
+class Solution {
+public:
+    vector<vector<int>> res;
+    vector<int> temp;
+    vector<vector<int>> findSubsequences(vector<int>& nums) {
+        traverse(nums,0);
+        return res;
+    }
+    // 去重
+    void traverse(vector<int> &nums, int index){
+        if(temp.size() >= 2)
+            res.push_back(temp);
+        int used[201]={0};  //数组的声明！！！！
+        for(int i = index;i < nums.size();i ++) {
+            if((!temp.empty()&&nums[i] < temp.back())||used[nums[i] + 100] == 1 ){
+                continue;
+            }
+            used[nums[i] + 100] = 1;
+            temp.push_back(nums[i]);
+            traverse(nums, i + 1);
+            temp.pop_back();
+        }
+    }
+};
+```
+
+### 全排列
+
+[46. 全排列](https://leetcode-cn.com/problems/permutations/)
+
+这里由于是全排列，所以每次遍历都需要从数组nums的起点开始，这样就要考虑去重
+
+去重就是要排除自己，我们可以使用一个数组进行去重
+
+问题还是数组应该在哪里被声明，在哪里被重置
+
+这里去重应该发生在树的纵向上，也就是整个排列的选择过程中。
+
+所以如果声明在递归函数中，在选择下一层的数据时，标记数组就会被重置
+
+所以标记数组最终声明在递归函数外，由于回溯返回时会对数据进行恢复，就不需要再进行重置。
+
+```c++
+class Solution {
+public:
+    vector<vector<int>> res;
+    vector<int> temp;
+    int used[21]= {0};
+    
+    vector<vector<int>> permute(vector<int>& nums) {
+        // temp.push_back(nums[0]);
+        traverse(nums);
+        return res;
+    }
+    void traverse(vector<int> &nums){
+        if(temp.size() == nums.size()) {
+            res.push_back(temp);
+            return;
+        }
+        for(int i = 0; i < nums.size(); i++) {
+            if(used[nums[i] + 10] == 1) continue;
+            temp.push_back(nums[i]);
+            used[nums[i] + 10] = 1;
+            traverse(nums);
+            temp.pop_back();
+            used[nums[i] + 10] = 0;
+        }
+    }
+};
+```
+
+
+
+### 全排列II
+
+[47. 全排列 II](https://leetcode-cn.com/problems/permutations-ii/)
+
+这题的原集合中有重复的元素，结果中不允许有重复的集合
+
+对于选择过程中排除自己，还是使用used数组，但是used数组中就不能使用used[nums[i]]了，因为有重复的元素，会把重复的元素都当作自己排除掉。这里使用used[i]即可
+
+然后对于重复集合的去重，排序之后，对重复的元素进行过滤
+
+但是这里的问题是，由于不使用index，而是都是使用从0开始的下标，所以会把重复的元素直接过滤掉，而不是作为【初始候选】过滤。
+
+所以这里还要加上判断，used[i-1]==0，即前一个元素没有被选中的情况下，该元素才被过滤。
+
+```c++
+class Solution {
+public:
+    vector<vector<int>> res;
+    vector<int> temp;
+    int used[21] = {0};
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+        sort(nums.begin(), nums.end()); 
+        traverse(nums);
+        return res;
+    }
+    void traverse(vector<int> &nums){
+        if(temp.size() == nums.size()) {
+            res.push_back(temp);
+            return;
+        }
+        for(int i = 0; i < nums.size(); i++) {
+            if(i != 0 && nums[i] == nums[i-1] && used[i-1] == 0) continue;
+            if(used[i] == 1) continue;
+            temp.push_back(nums[i]);
+            used[i] = 1;
+            traverse(nums);
+            temp.pop_back();
+            used[i] = 0;
+        }
+    }
+};
+```
+
