@@ -3639,3 +3639,367 @@ public:
 };
 ```
 
+
+
+
+
+### 重新安排行程
+
+[332. 重新安排行程](https://leetcode-cn.com/problems/reconstruct-itinerary/)
+
+在回溯的过程中，由于要按照字典序进行选择，所以我们先进行排序，这里要使用自定义排序。
+
+自定义排序的写法：
+
+```c++
+strcut mycomp{
+    bool operator() (vector<string> i, vector<string> j){
+        return i[1]<j[1];
+    }
+}
+sort(a.begin(), a.end(), mycomp());
+```
+
+然后就是在回溯时，找到一个就可以返回（使用bool返回值）
+
+```c++
+class Solution {
+public:
+    vector<string> res;
+    vector<string> finalres;
+    int used[301];
+
+    struct mycomp2 {
+        bool operator() (vector<string> i, vector<string> j) {
+            return (i[1] < j[1]);
+        }
+    };
+
+    vector<string> findItinerary(vector<vector<string>>& tickets) {
+        int len = tickets.size();
+        sort(tickets.begin(), tickets.end(), mycomp2()); //自定义排序
+        traverse(tickets, "JFK");
+        return res;
+    }
+    bool traverse(vector<vector<string>> &tickets, string start) {
+        if(res.size() == tickets.size()) {
+            res.push_back(start);
+            return true;
+        }
+        
+        for(int i = 0;i < tickets.size(); i++){
+            if(used[i] == 1) continue;
+            vector<string> t = tickets[i];
+            if(t[0] == start) {
+                res.push_back(t[0]);
+                used[i] = 1;
+                if (traverse(tickets, t[1])) return true;  // 找到即返回
+                res.pop_back();
+                used[i] = 0;
+            }
+        }
+        return false;
+    }
+};
+```
+
+### N皇后
+
+[51. N 皇后](https://leetcode-cn.com/problems/n-queens/)
+
+主要在遍历的过程中，行/列/对角线应该如何表示？
+
+这里是递归每一层，每一层中for循环遍历每一列，然后对行列对角线进行判断
+
+```c++
+class Solution {
+public:
+    int col[20];
+    int dig[20];
+    int udig[20];
+    vector<vector<string>> res;
+    vector<string> temp;
+
+    vector<vector<string>> solveNQueens(int n) {
+        vector<string> gd(n,string(n,'.'));
+        traverse(0,n,gd);
+        return res;
+    }
+    void traverse(int c,int n,vector<string> &gd) {  // c是行数，for遍历每列
+        if (c == n) {
+            res.push_back(temp);
+            return;
+        }
+        for(int i = 0;i < n;i ++){
+            if(col[i] == 1 || dig[i+c] == 1 || udig[i - c + n] == 1) continue;
+            gd[c][i] = 'Q';
+            col[i] = 1;
+            dig[i+c] = 1;
+            udig[i - c + n] = 1;
+            temp.push_back(gd[c]);
+            traverse(c+1, n, gd);
+            temp.pop_back();
+            col[i] = 0;
+            dig[i+c] = 0;
+            udig[i - c + n] = 0;
+            gd[c][i] = '.';
+        }
+    }
+};
+```
+
+### 解数独
+
+[37. 解数独](https://leetcode-cn.com/problems/sudoku-solver/)
+
+对于条件的判断是很容易想到的，使用3个二维数据来存储当前的数据使用情况。
+
+主要是在回溯的过程中，如何判断当前是否已经找到一个可行解？？？
+
+【当前解法】是通过如果某一个点1-9都不能放置时，说明找不到解；如果最后全部都正确放置（continue），说明找到了解。
+
+【其他解法】有一种传参行，列。在函数开始的时候对行，列参数进行处理，找到应该放置的点的坐标。回溯时行列参数不变。
+
+```c++
+class Solution {
+public:
+    int row[10][10]= {0};
+    int col[10][10] = {0};
+    int block[10][10] = {0};
+    void solveSudoku(vector<vector<char>>& board) {
+        for(int i = 0;i < board.size(); i++){
+            for(int j = 0; j < board[i].size(); j++){
+                if(board[i][j] != '.'){
+                    row[i][board[i][j] - '0'] = 1;
+                    col[j][board[i][j] - '0'] = 1;
+                    block[i/3*3+j/3][board[i][j] - '0'] = 1;
+                }
+            }
+        }
+        traverse(board);        
+    }
+    bool traverse(vector<vector<char>>& board){ 
+        for(int r =0; r < 9; r++){ //r->row
+            for(int i = 0;i < 9; i++){ //i->col 
+                if(board[r][i] != '.') continue; //continue就不会返回false
+                for(int j = 1; j <= 9; j++){ //j->num
+                    if(row[r][j] == 1 || col[i][j] == 1 || block[r/3*3+i/3][j] == 1) continue;
+                    board[r][i] = (j + '0');
+                    row[r][j] = 1;
+                    col[i][j] = 1;
+                    block[(r/3)*3+i/3][j] = 1;
+                    if (traverse(board)) return true;
+                    row[r][j] = 0;
+                    col[i][j] = 0;
+                    block[(r/3)*3+i/3][j] = 0;
+                    board[r][i] = '.';
+                }
+                return false;
+            } 
+        } 
+        return true;
+    }
+};
+
+```
+
+## 贪心算法
+
+### 分发饼干
+
+[455. 分发饼干](https://leetcode-cn.com/problems/assign-cookies/)
+
+把第一个（最小的）大于需求的饼干分给孩子即可。
+
+```C++
+class Solution {
+public:
+    int findContentChildren(vector<int>& g, vector<int>& s) {
+        sort(g.begin(), g.end());
+        sort(s.begin(), s.end());
+        int j = 0;
+        int res = 0;
+        for(int i = 0;i < g.size(); i++) {
+            while(j < s.size() && s[j] < g[i] ) j++;
+            if(j < s.size()) {
+                res++;
+                j++;
+            }
+        }
+        return res;
+    }
+};
+```
+
+
+
+### 摆动序列
+
+[376. 摆动序列](https://leetcode-cn.com/problems/wiggle-subsequence/)
+
+这里可以“删除”元素使得正负交替差出现
+
+但是这里其实只要计算出现正负交替差的次数即可，不用考虑删除元素
+
+由于presub初始为0，所以判断时要加上等于0
+
+```C++
+class Solution {
+public:
+    int wiggleMaxLength(vector<int>& nums) {
+        if(nums.size() < 2) return nums.size(); //2个元素得是不等的元素的时候才视为摆动序列
+        int res = 1;
+        int presub = 0;
+        int cursub = 0;
+        for(int i = 1; i < nums.size(); i++){
+            cursub = nums[i] - nums[i-1];
+            if ((cursub > 0 && presub <= 0) || (cursub < 0 && presub >= 0)) {
+                res++;
+                presub = cursub;
+            }
+        }
+        return res;
+    }
+};
+```
+
+### 最大子数组和
+
+[53. 最大子数组和](https://leetcode-cn.com/problems/maximum-subarray/)
+
+【动态规划】
+
+是一个很典型的动态规划问题
+
+`dp[i]`表示终点是`i`时最大数组和
+
+当下标为`i`时，要么就是子数组的最后一个元素为`nums[i]`，子序列和为`dp[j-1]+nums[i]`;要么就是`nums[i]` 为子序列的第一个元素，子序列的和为`nums[i]`
+
+最后取`dp[i]`中的最大值。
+
+```c++
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        int len = nums.size();
+        int dp[len+1];
+        dp[0] = nums[0];
+        int res = dp[0];
+
+        for(int j = 1;j < len;j++){
+            dp[j] = max(nums[j], dp[j-1] + nums[j]);
+            res = max(res, dp[j]);
+        }
+        return res;
+    }
+};
+```
+
+【贪心算法】
+
+这里贪心的主要思想是：累加的结果大于0时，对于后面的值求和都是有益的值，就可以继续向后求和。小于0则重置即可。
+
+```c++
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        int len = nums.size();
+        int count = 0;
+        int res = INT_MIN;
+        for(int i = 0; i < len; i++) {
+            count += nums[i];
+            res = max(res, count);
+            if(count <= 0) count = 0;
+        }
+        return res;
+    }
+};
+```
+
+
+
+### 买卖股票的最佳时机II
+
+[122. 买卖股票的最佳时机 II](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/)
+
+【贪心】
+
+这里由于可以多次进行买卖操作，所以贪心的想法就是对于每次第二天高于第一天的时候，都进行买卖，然后即可求得最大利润。
+
+【动规】
+
+这里每一天的最大利润由前一天的最大利润计算得来，但由于当前天的最大利润可能在前一天的两种状态下（持有/不持有）求得，所以这里要分别表示两种状态。
+
+> 由于每一天的最大利润仅由前一天计算得来，所以数组可以优化为一维数组。
+
+```c++
+// 贪心法
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int len = prices.size();
+        int res = 0;
+        for(int i = 1; i< len;i++){
+            res += max(prices[i] - prices[i-1], 0);
+        }
+        return res;   
+    }
+};
+
+//动规1
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int len = prices.size();
+        int dp[len+1][2];
+        dp[0][0] = 0;
+        dp[0][1] = -prices[0];
+        for(int i = 1; i < len; i++){
+            dp[i][0] = max(dp[i-1][1] + prices[i], dp[i-1][0]);
+            dp[i][1] = max(dp[i-1][1], dp[i-1][0] - prices[i]);
+        }
+        return max(dp[len-1][0], dp[len-1][1]);
+    }
+};
+
+// 动规2
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int len = prices.size();
+        int dp[2];
+        dp[0] = 0;
+        dp[1] = -prices[0];
+        for(int i = 1; i < len; i++){
+            dp[0] = max(dp[1] + prices[i], dp[0]);
+            dp[1] = max(dp[1], dp[0] - prices[i]);
+        }
+        return max(dp[0], dp[1]);
+    }
+};
+```
+
+### 跳跃游戏
+
+[55. 跳跃游戏](https://leetcode-cn.com/problems/jump-game/)
+
+记录每一步可以到达的最远距离，如果其中存在一个点可以到达最终节点，那么就是成功
+
+```c++
+
+class Solution {
+public:
+    bool canJump(vector<int>& nums) {
+        int len = 1;
+        for(int i = 0 ; i <= len; i++){
+            if(i == 0) len -= 1;
+            len = max(len, i + nums[i]);
+            if((nums[i] + i) >= (nums.size()-1)){
+                return true;
+            }
+        }
+        return false;
+    }
+};
+```
+
