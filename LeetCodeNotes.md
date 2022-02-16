@@ -4003,3 +4003,194 @@ public:
 };
 ```
 
+### 跳跃游戏II
+
+[45. 跳跃游戏 II](https://leetcode-cn.com/problems/jump-game-ii/)
+
+思路也比较简单，从终点向前遍历，找到最远的能到达终点的结点，并以此为终点继续向前遍历，直到找到起点。
+
+```c++
+class Solution {
+public:
+    int jump(vector<int>& nums) {
+        int len = nums.size();
+        int index = len - 1;
+        int cnt = 0;
+        while(index != 0){
+            int temp = 0;
+            for(int i = index-1; i >= 0;i --){
+                if(nums[i] + i >= index){
+                    temp = i;
+                }
+            }
+            index = temp;
+            cnt++;
+        }
+        return cnt;
+    }
+};
+```
+
+### K次取反后最大化的数组和
+
+[1005. K 次取反后最大化的数组和](https://leetcode-cn.com/problems/maximize-sum-of-array-after-k-negations/)
+
+```c++
+class Solution {
+public:
+    struct mycomp {
+        bool operator() (int a, int b){
+            return abs(a) > abs(b); 
+        } 
+    };
+    int largestSumAfterKNegations(vector<int>& nums, int k) {
+        // 对于全部是正数的数组而言，只需要一直对最小的正数进行符号的翻转即可
+        // 对于有负数的数组，要按照绝对值的大小，从大到小依次翻转
+        // 当负数翻转完之后，要找到最小的正数，这时候如果遍历一边数组就变得很麻烦
+        // 所以我们一开始就按照绝对值对数组进行排序，翻转玩负数后，最后一个数即为最小的正数
+        sort(nums.begin(), nums.end(), mycomp());
+        for(int i = 0;i < nums.size(); i++){
+            if(k == 0) break;
+            if(nums[i] < 0) {
+                nums[i] = 0-nums[i];
+                k--;
+            }
+        }
+        if(k > 0) {
+            while(k != 0){
+                nums[nums.size() - 1] = 0 - nums[nums.size() - 1];
+                k--;
+            }
+        }
+        int res =0;
+        for(int n : nums) res+=n;
+        return res;
+    }        
+};
+```
+
+### 加油站
+
+[134. 加油站](https://leetcode-cn.com/problems/gas-station/)
+
+这题就是要想明白当前起点不能到达终点时，新起点怎么计算？怎么计算能否走完一圈？
+
+```c++
+class Solution {
+public:
+    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+        int rest = 0;
+        int currest = 0;
+        int index=0;
+        for(int i = 0;i < gas.size(); i++){
+            rest +=  (gas[i] - cost[i]); //总的差值
+            currest +=  (gas[i] - cost[i]); //当前差值
+            if(currest < 0) {
+                index = i+1; // index到i之间的站点都不能作为起点，因为这些都是可到达的，意味着都是有富裕的油，但是还是不能到达i+1，所以用i+1做起点
+                currest = 0;
+            }
+        }
+        return rest < 0 ? -1 : index; //总差值大于0，意味着从index出发到len的多余油量 比 0到index少的油量 要多，所以能跑玩全程
+    }
+};
+```
+
+
+
+### 分发糖果
+
+[135. 分发糖果](https://leetcode-cn.com/problems/candy/)
+
+要通过2次反方向的遍历，分别计算每个点的取值
+
+```c++
+class Solution {
+public:
+    int candy(vector<int>& ratings) {
+        //space O(n)
+        vector<int> candy(ratings.size(), 1);
+        int res = 0;
+        for (int i = 1; i < ratings.size(); i++){
+            if(ratings[i] > ratings[i-1]) candy[i] = candy[i-1] + 1; //用前一个值+1，而不是自己+1
+        }
+        for(int i = ratings.size()-2; i>=0; i--){
+            if(ratings[i] > ratings[i+1]) candy[i] = max(candy[i], candy[i+1] + 1); // 要取前一次遍历和后一个值+1的最大值
+        }
+        for(int i = 0; i<ratings.size();i++) res += candy[i];
+        return res;
+    }
+};
+```
+
+
+
+### 柠檬水找零
+
+[860. 柠檬水找零](https://leetcode-cn.com/problems/lemonade-change/)
+
+```c++
+class Solution {
+public:
+    bool lemonadeChange(vector<int>& bills) {
+        int five = 0;
+        int ten = 0;
+        for(int i =0; i<bills.size(); i++) {
+            if(bills[i] == 5) {
+                five++;
+            }
+            if(bills[i] == 10) {
+                ten ++;
+                five--;
+                if(five < 0) return false;
+            }
+            if(bills[i] == 20){
+                if(ten > 0) {
+                    ten --;
+                    five--;
+                    if(five < 0) return false;
+                }else{
+                    five = five - 3;
+                    if(five < 0) return false;
+                }
+            }
+        }
+        return true;
+    }
+};
+```
+
+
+
+### 根据身高重建队列
+
+[406. 根据身高重建队列](https://leetcode-cn.com/problems/queue-reconstruction-by-height/)
+
+很容易想到要先排序，问题就是怎么排序？排序完怎么处理？
+
+这里的`people[i][1]`表示有这么多个人比i这个人身高要高（或相等）
+
+所以当我们把排完序的值插入到结果中的时候，应该要插入的位置就是前面有多少个人比他高（或相等）
+
+那么我就要按照身高先排序-身高大的在前面，这样插入后也不会乱序-已插入的身高还是被未插入的身高要大；
+
+如果身高相同的情况下，那么就要把`people[i][1]`较小的值放在前面，因为这个值也满足条件 -（前面有多少个人比他高（或相等））
+
+```c++
+class Solution {
+public:
+    static bool mycomp(const vector<int> &a, const vector<int> &b){
+        if(a[0] == b[0]) return a[1] < b[1];
+        return a[0] > b[0];
+    }
+    vector<vector<int>> reconstructQueue(vector<vector<int>>& people) {
+        vector<vector<int>> res;
+        sort(people.begin(), people.end(), mycomp);
+        for(int i = 0;i <people.size(); i++) {
+            res.insert(res.begin() + people[i][1], people[i]);
+        }
+
+        return res;
+    }
+};
+```
+
