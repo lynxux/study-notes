@@ -4194,3 +4194,283 @@ public:
 };
 ```
 
+### 用最少数量的箭引爆气球
+
+[452. 用最少数量的箭引爆气球](https://leetcode-cn.com/problems/minimum-number-of-arrows-to-burst-balloons/)
+
+思路就是合并有overlap的区间，最后不能合并的数量就是需要的箭的数量
+
+一开始在合并的过程中，考虑了start和end两个端点，这样存储的时候就很麻烦
+
+但是思考过后可以发现，其实第一个的左端点是没有作用的，只要右端点和第二个的左端点有重叠，就用第一个的右端点与第二个的右端点的最小值继续即可
+
+```c++
+//v1
+class Solution {
+public:
+    static bool cmp (const vector<int> &a, const vector<int> &b) {
+        return a[0] < b[0];
+    }
+    int findMinArrowShots(vector<vector<int>>& points) {
+        sort(points.begin(), points.end(), cmp);
+        vector<vector<int>> res;
+        vector<int> temp(2);
+        temp[0] = 0;
+        temp[1] = INT_MAX;
+        for(int i = 0; i < points.size(); i++) {
+            if(temp[1] >= points[i][0]) {
+                temp[0] = points[i][0];
+                temp[1] = min(temp[1], points[i][1]);
+            }else if(temp[1] < points[i][0]) {
+                res.push_back(temp);
+                temp[0] = points[i][0];
+                temp[1] = points[i][1];
+            }
+            if(i == points.size() - 1){
+                res.push_back(temp);
+            }
+        }
+        return res.size();
+    }
+};
+
+//v2
+class Solution {
+public:
+    static bool cmp (const vector<int> &a, const vector<int> &b) {
+        return a[0] < b[0];
+    }
+    int findMinArrowShots(vector<vector<int>>& points) {
+        sort(points.begin(), points.end(), cmp);
+        int res = 1;  //=1！！！！
+        for(int i = 0; i < points.size()-1; i++) {
+            if(points[i][1] < points[i+1][0]) {
+                res++;
+            }else {
+                points[i+1][1] = min(points[i][1], points[i+1][1]);
+            }
+        }
+        return res;
+    }
+};
+```
+
+### 无重叠区间
+
+[435. 无重叠区间](https://leetcode-cn.com/problems/non-overlapping-intervals/)
+
+思路和上题【用最少数量的箭引爆气球】类似
+
+```c++
+class Solution {
+public:
+    static bool cmp (const vector<int> &a, const vector<int> &b) {
+        if(a[0] == b[0]) return a[1] < b[1];
+        return a[0] < b[0];
+    }
+    int eraseOverlapIntervals(vector<vector<int>>& intervals) {
+        sort(intervals.begin(), intervals.end(), cmp);
+        int res = 0;
+        for(int i = 0; i < intervals.size()-1;i++){
+            if(intervals[i][1] > intervals[i+1][0]){
+                intervals[i+1][1] = min(intervals[i][1], intervals[i+1][1]);
+                res ++;
+            }
+        }
+        return res;
+    }
+};
+```
+
+### 划分字母区间
+
+[763. 划分字母区间](https://leetcode-cn.com/problems/partition-labels/)
+
+思路很容易的理解的，s[i]的最少长度为s[i]最后一次出现的下标（right）减去第一出现的下标（left）；如果这段区间的中其他的字母最后一次出现的下标更大，则right相应增大，直到遍历的i等于right表示一段字串完成。
+
+```c++
+class Solution {
+public:
+    vector<int> partitionLabels(string s) {
+        int cnt[27];
+        for(int i = 0; i < s.size(); i++){
+            cnt[s[i] - 'a'] = i;  // -'a' 不是-'0'
+        }
+        vector<int> res;
+        int right = 0;
+        int left = 0;
+        for(int i =0;i < s.size(); i++){
+            char c = s[i];
+            right = max(right, cnt[c - 'a']);
+            if(i == right) {
+                res.push_back(right - left + 1);
+                left = i + 1;
+            }
+        }
+        return res;
+    }
+};
+```
+
+### 合并区间
+
+[56. 合并区间](https://leetcode-cn.com/problems/merge-intervals/)
+
+这里左端点不变，并且可以用`res.back()`取出要比较的元素！
+
+```c++
+class Solution {
+public:
+    vector<vector<int>> merge(vector<vector<int>>& intervals) {
+        if(intervals.empty())
+            return {};
+        sort(intervals.begin(),intervals.end());
+        vector<vector<int>> res;
+        res.push_back(intervals[0]);
+        for(int i = 1;i < intervals.size(); i++) {
+            if(res.back()[1] >= intervals[i][0]){
+                res.back()[1] = max(intervals[i][1], res.back()[1]);
+            }else {
+                res.push_back(intervals[i]);
+            }
+        }
+        return res;
+    }
+};
+```
+
+### 单调递增的数字
+
+[738. 单调递增的数字](https://leetcode-cn.com/problems/monotone-increasing-digits/)
+
+主要使弄清楚当高位数字大于低位数字使，我们应该如何变化？
+
+当高位数字减1后，该高位之后的所有低位数字都应该变成9，此时的数字才是满足要求的最大数字。
+
+所以我们在遍历的过程中记录减1的最高位即可。
+
+```c++
+class Solution {
+public:
+    int monotoneIncreasingDigits(int n) {
+        string num = to_string(n);
+        int len = num.size();
+        int res = 0;
+        for(int i = num.size() - 1;i > 0;i--){
+            if(num[i-1] > num[i]) {
+                num[i-1] --;
+                len = i;  //--之后的所有数字，都为9的上海才是最大的
+            }
+        }
+        for(int i = len; i< num.size();i++){
+            num[i] = '9';
+        }
+        return stoi(num);
+    }
+};
+```
+
+### *买卖股票的最佳时机含手续费
+
+[714. 买卖股票的最佳时机含手续费](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/)
+
+这里对于当日价格 大于 前一日价格就可以记录当日利润
+
+记录买入价格=minprice
+
+我们考虑从第二天起，当日价格与买入价格之间的关系
+
+- 如果当日价格小于买入价格，那么我们就更新买入价格为当前价格
+
+- 如果当日价格大于买入价格，但是差价小于fee，那就不操作（即不卖出）
+- 如果当日价格大于买入价格，且差价大于fee，那说明我们就可以在当日卖出，累加利润
+    - 这里的问题是，如果出现连续的价格上涨，多次交易会引发多次手续费，所以我们应该在上升过程中的最高的价格点卖出
+    - 所以我们在卖出后，把minprices = prices[i] - fee，所以在下一次卖出时就会抵扣手续费
+    - 那么这里比较minprice和prices[i]的时候，就是只有prices[i]要比前一日的price小，且差距大于fee，才会更新买入价格
+        - 因为如果差价小于fee，我们进行买入操作的话，增加的一次买卖操作会带来负收益。
+
+```c++
+class Solution {
+public:
+    int maxProfit(vector<int>& prices, int fee) {
+        int res = 0;
+        int minprice = prices[0];
+		for(int i = 1;i < prices.size(); i++) {
+            if(prices[i] < minprice) minprice = prices[i];
+            if(prices[i] > minprice + fee) {
+                res += prices[i] - minprice - fee;
+                minprice = prices[i] - fee; //重点在于这里
+            }
+        }
+        return res;
+    }
+};
+```
+
+### 监控二叉树
+
+[968. 监控二叉树](https://leetcode-cn.com/problems/binary-tree-cameras/)
+
+贪心的策略是怎样的？
+
+这里的想法时我们要从底层向上层考虑 -> 使用后序遍历
+
+**原因是：**我们把叶子节点的上一层放置摄像头，这样就可以监控到最多的结点，所以我们就从底层向上层递推
+
+一个节点可能有三种状态：
+
+ 0：该节点无覆盖
+ 1：本节点有摄像头
+ 2：本节点有覆盖
+
+分类讨论当前节点：
+
+- 如果是空结点，视为被覆盖
+- 根据左右子节点的状态进行判断
+    - 如果左右子节点都是2（覆盖），则当前结点应该没有被覆盖，并且当前结点不应该放置摄像头
+    - 如果左右子节点中都是摄像头，或者有一个为摄像头，说明该节点被覆盖
+    - 如果左右子节点中都无覆盖，或者有一个被覆盖，或者只有一个为摄像头，为了覆盖子节点，就需要添加摄像头
+
+最后处理完成之后，root未被覆盖（返回0），res+1
+
+```c++
+class Solution {
+public:
+    int res = 0;
+    // 所以我们要从下往上看，局部最优：让叶子节点的父节点安摄像头，所用摄像头最少
+    int minCameraCover(TreeNode* root) {
+        if(traverse(root) == 0) {  // root 无覆盖
+            res++;
+        }
+        return res;
+    }
+    // 0：该节点无覆盖
+    // 1：本节点有摄像头
+    // 2：本节点有覆盖
+    int traverse(TreeNode *root) {
+        if(root == nullptr) return 2;
+        int left = traverse(root->left);
+        int right =traverse(root->right);
+        if(left == 2 && right == 2) { // 左右节点都有覆盖
+            return 0;
+        }
+        // left == 0 && right == 0 左右节点无覆盖
+        // left == 1 && right == 0 左节点有摄像头，右节点无覆盖
+        // left == 0 && right == 1 左节点有无覆盖，右节点摄像头
+        // left == 0 && right == 2 左节点无覆盖，右节点覆盖
+        // left == 2 && right == 0 左节点覆盖，右节点无覆盖
+        if(left == 0 || right == 0) {
+            res++;
+            return 1;
+        }
+        // left == 1 && right == 2 左节点有摄像头，右节点有覆盖
+        // left == 2 && right == 1 左节点有覆盖，右节点有摄像头
+        // left == 1 && right == 1 左右节点都有摄像头
+        if(left == 1 || right == 1) {
+            return 2;
+        }
+        return -1; //不会执行
+    }
+};
+```
+
