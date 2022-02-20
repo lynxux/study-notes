@@ -12,9 +12,9 @@
 
 ## 数组
 
-### 二分查找
+### 1.二分查找
 
- [704. 二分查找](https://leetcode-cn.com/problems/binary-search/)
+[704. 二分查找](https://leetcode-cn.com/problems/binary-search/)
 
 最主要的是要考虑 `left <= right` 以及 `left` ，`right`的赋值。
 
@@ -41,7 +41,7 @@ func search(nums []int, target int) int {
 
 
 
-### 移除元素
+### 2.移除元素
 
 [27. 移除元素](https://leetcode-cn.com/problems/remove-element/)
 
@@ -63,9 +63,7 @@ func removeElement(nums []int, val int) int {
 }
 ```
 
-
-
-### 有序数组的平方
+### 3.有序数组的平方
 
 [977. 有序数组的平方](https://leetcode-cn.com/problems/squares-of-a-sorted-array/)
 
@@ -101,7 +99,7 @@ func abs(a int) int {
 
 
 
-### 长度最小的子数组
+### 4.长度最小的子数组
 
 [209. 长度最小的子数组](https://leetcode-cn.com/problems/minimum-size-subarray-sum/)
 
@@ -139,7 +137,7 @@ public:
 
 
 
-### 螺旋矩阵II
+### 5.螺旋矩阵II
 
 [59. 螺旋矩阵 II](https://leetcode-cn.com/problems/spiral-matrix-ii/)
 
@@ -190,7 +188,7 @@ public:
 
 ## 链表
 
-### 移除链表元素
+### 1.移除链表元素
 
 [203. 移除链表元素](https://leetcode-cn.com/problems/remove-linked-list-elements/)
 
@@ -223,7 +221,7 @@ public:
 
 
 
-### 设计链表
+### 2.设计链表
 
 [707. 设计链表](https://leetcode-cn.com/problems/design-linked-list/)
 
@@ -338,7 +336,7 @@ public:
 
 
 
-### 反转链表
+### 3.反转链表
 
 [206. 反转链表](https://leetcode-cn.com/problems/reverse-linked-list/)
 
@@ -365,7 +363,7 @@ public:
 
 
 
-### 两两交换链表中的节点
+### 4.两两交换链表中的节点
 
 [24. 两两交换链表中的节点](https://leetcode-cn.com/problems/swap-nodes-in-pairs/)
 
@@ -399,7 +397,7 @@ public:
 
 
 
-### 删除链表的倒数第N个节点
+### 5.删除链表的倒数第N个节点
 
 [19. 删除链表的倒数第 N 个结点](https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list/)
 
@@ -431,7 +429,7 @@ public:
 
 
 
-### 链表相交
+### 6.链表相交
 
 [面试题 02.07. 链表相交](https://leetcode-cn.com/problems/intersection-of-two-linked-lists-lcci/)
 
@@ -477,7 +475,7 @@ public:
 
 
 
-### 环形链表II
+### 7.环形链表II
 
 [142. 环形链表 II](https://leetcode-cn.com/problems/linked-list-cycle-ii/)
 
@@ -516,7 +514,7 @@ public:
 
 ## 哈希表
 
-### 有效的字母异位词
+### 1.有效的字母异位词
 
 [242. 有效的字母异位词](https://leetcode-cn.com/problems/valid-anagram/)
 
@@ -543,7 +541,7 @@ public:
 
 
 
-###  两个数组的交集
+###  2.两个数组的交集
 
 [349. 两个数组的交集](https://leetcode-cn.com/problems/intersection-of-two-arrays/)
 
@@ -577,7 +575,7 @@ public:
 
 
 
-### 快乐数
+### 3.快乐数
 
 [202. 快乐数](https://leetcode-cn.com/problems/happy-number/)
 
@@ -611,7 +609,7 @@ public:
 
 
 
-### 两数相加
+### 4.两数相加
 
 [1. 两数之和](https://leetcode-cn.com/problems/two-sum/)
 
@@ -641,7 +639,7 @@ public:
 
 
 
-### 四数相加II
+### 5.四数相加II
 
 [454. 四数相加 II](https://leetcode-cn.com/problems/4sum-ii/)
 
@@ -674,7 +672,7 @@ public:
 
 
 
-### 赎金信
+### 6.赎金信
 
 [383. 赎金信](https://leetcode-cn.com/problems/ransom-note/)
 
@@ -698,7 +696,7 @@ public:
 
 
 
-### 三数之和
+### 7.三数之和
 
 [15. 三数之和](https://leetcode-cn.com/problems/3sum/)
 
@@ -757,7 +755,7 @@ public:
 
 
 
-### 四数之和
+### 8.四数之和
 
 [18. 四数之和](https://leetcode-cn.com/problems/4sum/)
 
@@ -812,7 +810,7 @@ public:
 
 ## 字符串
 
-### 反转字符串
+### 1.反转字符串
 
 [344. 反转字符串](https://leetcode-cn.com/problems/reverse-string/)
 
@@ -832,7 +830,7 @@ public:
 
 
 
-### 反转字符串II
+### 2.反转字符串II
 
 [541. 反转字符串 II](https://leetcode-cn.com/problems/reverse-string-ii/)
 
@@ -862,7 +860,7 @@ public:
 
 
 
-### 替换空格
+### 3.替换空格
 
 [剑指 Offer 05. 替换空格](https://leetcode-cn.com/problems/ti-huan-kong-ge-lcof/)
 
@@ -895,7 +893,7 @@ public:
 
 
 
-### 翻转字符串里的单词
+### 4.翻转字符串里的单词
 
 [151. 翻转字符串里的单词](https://leetcode-cn.com/problems/reverse-words-in-a-string/)
 
@@ -961,7 +959,7 @@ public:
 
 ## 栈与队列
 
-### 用栈实现队列
+### 1.用栈实现队列
 
 [232. 用栈实现队列](https://leetcode-cn.com/problems/implement-queue-using-stacks/)
 
@@ -1009,7 +1007,7 @@ public:
 
 
 
-### 用队列实现栈
+### 2.用队列实现栈
 
 [225. 用队列实现栈](https://leetcode-cn.com/problems/implement-stack-using-queues/)
 
@@ -1051,7 +1049,7 @@ public:
 
 
 
-### 有效的括号
+### 3.有效的括号
 
 [20. 有效的括号](https://leetcode-cn.com/problems/valid-parentheses/)
 
@@ -1088,7 +1086,7 @@ public:
 
 
 
-### 删除字符串中的所有相邻重复项
+### 4.删除字符串中的所有相邻重复项
 
 [1047. 删除字符串中的所有相邻重复项](https://leetcode-cn.com/problems/remove-all-adjacent-duplicates-in-string/)
 
@@ -1122,7 +1120,7 @@ public:
 
 
 
-### 逆波兰表达式求值
+### 5.逆波兰表达式求值
 
 [150. 逆波兰表达式求值](https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/)
 
@@ -1189,7 +1187,7 @@ public:
 
 
 
-###  滑动窗口最大值
+###  6.滑动窗口最大值
 
 [239. 滑动窗口最大值](https://leetcode-cn.com/problems/sliding-window-maximum/)
 
@@ -1227,7 +1225,7 @@ public:
 };
 ```
 
-### 前 K 个高频元素
+### 7.前 K 个高频元素
 
 [347. 前 K 个高频元素](https://leetcode-cn.com/problems/top-k-frequent-elements/)
 
@@ -1271,7 +1269,7 @@ public:
 
 ## 二叉树
 
-### 二叉树的递归遍历
+### 1.二叉树的递归遍历
 
 [144. 二叉树的前序遍历](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
 
@@ -1339,7 +1337,7 @@ public:
 
 
 
-### 二叉树的迭代遍历*
+### 2.二叉树的迭代遍历*
 
 [144. 二叉树的前序遍历](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
 
@@ -1473,7 +1471,7 @@ vector<int> postorderTraversal(TreeNode* root) {
 
 
 
-### 二叉树的层次遍历
+### 3.二叉树的层次遍历
 
 [102. 二叉树的层序遍历](https://leetcode-cn.com/problems/binary-tree-level-order-traversal/)
 
@@ -2021,7 +2019,7 @@ public:
 
 
 
-### 翻转二叉树
+### 4.翻转二叉树
 
 [226. 翻转二叉树](https://leetcode-cn.com/problems/invert-binary-tree/)
 
@@ -2080,7 +2078,7 @@ public:
 
 
 
-### 对称二叉树
+### 5.对称二叉树
 
 [101. 对称二叉树](https://leetcode-cn.com/problems/symmetric-tree/)
 
@@ -2113,7 +2111,7 @@ public:
 };
 ```
 
-### 二叉树的最大深度
+### 6.二叉树的最大深度
 
 [104. 二叉树的最大深度](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/)
 
@@ -2145,7 +2143,7 @@ public:
 };
 ```
 
-### 二叉树的最小深度
+### 7.二叉树的最小深度
 
 [111. 二叉树的最小深度](https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/)
 
@@ -2153,7 +2151,7 @@ public:
 
 
 
-### 完全二叉树的节点个数
+### 8.完全二叉树的节点个数
 
 [222. 完全二叉树的节点个数](https://leetcode-cn.com/problems/count-complete-tree-nodes/)
 
@@ -2213,7 +2211,7 @@ public:
 
 
 
-### 平衡二叉树
+### 9.平衡二叉树
 
 [110. 平衡二叉树](https://leetcode-cn.com/problems/balanced-binary-tree/)
 
@@ -2244,7 +2242,7 @@ public:
 
 
 
-### 二叉树的所有路径
+### 10.二叉树的所有路径
 
 [257. 二叉树的所有路径](https://leetcode-cn.com/problems/binary-tree-paths/)
 
@@ -2329,7 +2327,7 @@ public:
 
 
 
-### 相同的树
+### 11.相同的树
 
 [100. 相同的树](https://leetcode-cn.com/problems/same-tree/)
 
@@ -2347,7 +2345,7 @@ public:
 
 
 
-### 另一棵树的子树
+### 12.另一棵树的子树
 
 [572. 另一棵树的子树](https://leetcode-cn.com/problems/subtree-of-another-tree/)
 
@@ -2378,7 +2376,7 @@ public:
 
 
 
-### 左叶子之和
+### 13.左叶子之和
 
 [404. 左叶子之和](https://leetcode-cn.com/problems/sum-of-left-leaves/)
 
@@ -2413,7 +2411,7 @@ public:
 
 
 
-### 找树左下角的值
+### 14.找树左下角的值
 
 [513. 找树左下角的值](https://leetcode-cn.com/problems/find-bottom-left-tree-value/)
 
@@ -2506,7 +2504,7 @@ public:
 
 
 
-### 路径总和
+### 15.路径总和*
 
 [112. 路径总和](https://leetcode-cn.com/problems/path-sum/)
 
@@ -2583,7 +2581,7 @@ public:
 
 
 
-### 从遍历序列构造二叉树
+### 16.从遍历序列构造二叉树
 
 [106. 从中序与后序遍历序列构造二叉树](https://leetcode-cn.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/)
 
@@ -2666,7 +2664,7 @@ public:
 };
 ```
 
-### 最大二叉树
+### 17.最大二叉树
 
 [654. 最大二叉树](https://leetcode-cn.com/problems/maximum-binary-tree/)
 
@@ -2697,7 +2695,7 @@ public:
 };
 ```
 
-### 合并二叉树
+### 18.合并二叉树
 
 [617. 合并二叉树](https://leetcode-cn.com/problems/merge-two-binary-trees/)
 
@@ -2716,7 +2714,7 @@ public:
 };
 ```
 
-### 二叉搜索树中的搜索
+### 19.二叉搜索树中的搜索
 
 [700. 二叉搜索树中的搜索](https://leetcode-cn.com/problems/search-in-a-binary-search-tree/)
 
@@ -2739,7 +2737,7 @@ public:
 };
 ```
 
-### 验证二叉搜索树
+### 20.验证二叉搜索树
 
 [98. 验证二叉搜索树](https://leetcode-cn.com/problems/validate-binary-search-tree/)
 
@@ -2789,7 +2787,7 @@ public:
 
 
 
-### 二叉搜索树的最小绝对差
+### 21.二叉搜索树的最小绝对差
 
 [530. 二叉搜索树的最小绝对差](https://leetcode-cn.com/problems/minimum-absolute-difference-in-bst/)
 
@@ -2816,7 +2814,7 @@ public:
 };
 ```
 
-### 二叉搜索树中的众数
+### 22.二叉搜索树中的众数
 
 [501. 二叉搜索树中的众数](https://leetcode-cn.com/problems/find-mode-in-binary-search-tree/)
 
@@ -2851,7 +2849,7 @@ public:
 };
 ```
 
-### 二叉树的最近公共祖先
+### 23.二叉树的最近公共祖先
 
 [236. 二叉树的最近公共祖先](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-tree/)
 
@@ -2928,7 +2926,7 @@ public:
 
 ```
 
-### 二叉搜索树中的插入操作
+### 24.二叉搜索树中的插入操作
 
 [701. 二叉搜索树中的插入操作](https://leetcode-cn.com/problems/insert-into-a-binary-search-tree/)
 
@@ -2985,7 +2983,7 @@ public:
 };
 ```
 
-### 删除二叉搜索树中的节点
+### 25.删除二叉搜索树中的节点
 
 [450. 删除二叉搜索树中的节点](https://leetcode-cn.com/problems/delete-node-in-a-bst/)
 
@@ -3076,7 +3074,7 @@ public:
 };
 ```
 
-### 修剪二叉树
+### 26.修剪二叉树
 
 [669. 修剪二叉搜索树](https://leetcode-cn.com/problems/trim-a-binary-search-tree/)
 
@@ -3112,7 +3110,7 @@ public:
 };
 ```
 
-### 将有序数组转换为二叉搜索树
+### 27.将有序数组转换为二叉搜索树
 
 [108. 将有序数组转换为二叉搜索树](https://leetcode-cn.com/problems/convert-sorted-array-to-binary-search-tree/)
 
@@ -3136,7 +3134,7 @@ public:
 };
 ```
 
-### 把二叉搜索树转换为累加树
+### 28.把二叉搜索树转换为累加树
 
 [538. 把二叉搜索树转换为累加树](https://leetcode-cn.com/problems/convert-bst-to-greater-tree/)
 
@@ -3168,7 +3166,7 @@ public:
 
 ## 回溯算法
 
-### 组合
+### 1.组合
 
 [77. 组合](https://leetcode-cn.com/problems/combinations/)
 
@@ -3210,7 +3208,7 @@ public:
 };
 ```
 
-### 组合总和III
+### 2.组合总和III
 
 [216. 组合总和 III](https://leetcode-cn.com/problems/combination-sum-iii/)
 
@@ -3238,7 +3236,7 @@ public:
 };
 ```
 
-### 电话号码的字母组合
+### 3.电话号码的字母组合
 
 [17. 电话号码的字母组合](https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/)
 
@@ -3274,7 +3272,7 @@ public:
 };
 ```
 
-### 组合总和
+### 4.组合总和
 
 [39. 组合总和](https://leetcode-cn.com/problems/combination-sum/)
 
@@ -3306,7 +3304,7 @@ public:
 
 
 
-### 组合总和II
+### 5.组合总和II
 
 [40. 组合总和 II](https://leetcode-cn.com/problems/combination-sum-ii/)
 
@@ -3346,7 +3344,7 @@ public:
 }
 ```
 
-### 分割回文串
+### 6.分割回文串
 
 [131. 分割回文串](https://leetcode-cn.com/problems/palindrome-partitioning/)
 
@@ -3391,7 +3389,7 @@ public:
 };
 ```
 
-### 复原IP地址
+### 7.复原IP地址
 
 [93. 复原 IP 地址](https://leetcode-cn.com/problems/restore-ip-addresses/)
 
@@ -3445,7 +3443,7 @@ public:
 };
 ```
 
-### 子集
+### 8.子集
 
 [78. 子集](https://leetcode-cn.com/problems/subsets/)
 
@@ -3474,7 +3472,7 @@ public:
 };
 ```
 
-### 子集II
+### 9.子集II
 
 [90. 子集 II](https://leetcode-cn.com/problems/subsets-ii/)
 
@@ -3504,7 +3502,7 @@ public:
 };
 ```
 
-### 递增子序列
+### 10.递增子序列
 
 [491. 递增子序列](https://leetcode-cn.com/problems/increasing-subsequences/)
 
@@ -3549,7 +3547,7 @@ public:
 };
 ```
 
-### 全排列
+### 11.全排列
 
 [46. 全排列](https://leetcode-cn.com/problems/permutations/)
 
@@ -3596,7 +3594,7 @@ public:
 
 
 
-### 全排列II
+### 12.全排列II
 
 [47. 全排列 II](https://leetcode-cn.com/problems/permutations-ii/)
 
@@ -3643,7 +3641,7 @@ public:
 
 
 
-### 重新安排行程
+### 13.重新安排行程
 
 [332. 重新安排行程](https://leetcode-cn.com/problems/reconstruct-itinerary/)
 
@@ -3703,7 +3701,7 @@ public:
 };
 ```
 
-### N皇后
+### 14.N皇后
 
 [51. N 皇后](https://leetcode-cn.com/problems/n-queens/)
 
@@ -3748,7 +3746,7 @@ public:
 };
 ```
 
-### 解数独
+### 15.解数独
 
 [37. 解数独](https://leetcode-cn.com/problems/sudoku-solver/)
 
@@ -3805,7 +3803,7 @@ public:
 
 ## 贪心算法
 
-### 分发饼干
+### 1.分发饼干
 
 [455. 分发饼干](https://leetcode-cn.com/problems/assign-cookies/)
 
@@ -3833,7 +3831,7 @@ public:
 
 
 
-### 摆动序列
+### 2.摆动序列
 
 [376. 摆动序列](https://leetcode-cn.com/problems/wiggle-subsequence/)
 
@@ -3863,7 +3861,7 @@ public:
 };
 ```
 
-### 最大子数组和
+### 3.最大子数组和
 
 [53. 最大子数组和](https://leetcode-cn.com/problems/maximum-subarray/)
 
@@ -3918,7 +3916,7 @@ public:
 
 
 
-### 买卖股票的最佳时机II
+### 4.买卖股票的最佳时机II
 
 [122. 买卖股票的最佳时机 II](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/)
 
@@ -3979,7 +3977,7 @@ public:
 };
 ```
 
-### 跳跃游戏
+### 5.跳跃游戏
 
 [55. 跳跃游戏](https://leetcode-cn.com/problems/jump-game/)
 
@@ -4003,7 +4001,7 @@ public:
 };
 ```
 
-### 跳跃游戏II
+### 6.跳跃游戏II
 
 [45. 跳跃游戏 II](https://leetcode-cn.com/problems/jump-game-ii/)
 
@@ -4031,7 +4029,7 @@ public:
 };
 ```
 
-### K次取反后最大化的数组和
+### 7.K次取反后最大化的数组和
 
 [1005. K 次取反后最大化的数组和](https://leetcode-cn.com/problems/maximize-sum-of-array-after-k-negations/)
 
@@ -4069,7 +4067,7 @@ public:
 };
 ```
 
-### 加油站
+### 8.加油站
 
 [134. 加油站](https://leetcode-cn.com/problems/gas-station/)
 
@@ -4095,9 +4093,7 @@ public:
 };
 ```
 
-
-
-### 分发糖果
+### 9.分发糖果
 
 [135. 分发糖果](https://leetcode-cn.com/problems/candy/)
 
@@ -4122,9 +4118,7 @@ public:
 };
 ```
 
-
-
-### 柠檬水找零
+### 10.柠檬水找零
 
 [860. 柠檬水找零](https://leetcode-cn.com/problems/lemonade-change/)
 
@@ -4159,9 +4153,7 @@ public:
 };
 ```
 
-
-
-### 根据身高重建队列
+### 11.根据身高重建队列
 
 [406. 根据身高重建队列](https://leetcode-cn.com/problems/queue-reconstruction-by-height/)
 
@@ -4194,7 +4186,7 @@ public:
 };
 ```
 
-### 用最少数量的箭引爆气球
+### 12.用最少数量的箭引爆气球
 
 [452. 用最少数量的箭引爆气球](https://leetcode-cn.com/problems/minimum-number-of-arrows-to-burst-balloons/)
 
@@ -4255,7 +4247,7 @@ public:
 };
 ```
 
-### 无重叠区间
+### 13.无重叠区间
 
 [435. 无重叠区间](https://leetcode-cn.com/problems/non-overlapping-intervals/)
 
@@ -4282,7 +4274,7 @@ public:
 };
 ```
 
-### 划分字母区间
+### 14.划分字母区间
 
 [763. 划分字母区间](https://leetcode-cn.com/problems/partition-labels/)
 
@@ -4312,7 +4304,7 @@ public:
 };
 ```
 
-### 合并区间
+### 15.合并区间
 
 [56. 合并区间](https://leetcode-cn.com/problems/merge-intervals/)
 
@@ -4339,7 +4331,7 @@ public:
 };
 ```
 
-### 单调递增的数字
+### 16.单调递增的数字
 
 [738. 单调递增的数字](https://leetcode-cn.com/problems/monotone-increasing-digits/)
 
@@ -4370,7 +4362,7 @@ public:
 };
 ```
 
-### *买卖股票的最佳时机含手续费
+### 17.买卖股票的最佳时机含手续费*
 
 [714. 买卖股票的最佳时机含手续费](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/)
 
@@ -4407,7 +4399,7 @@ public:
 };
 ```
 
-### 监控二叉树
+### 18.监控二叉树
 
 [968. 监控二叉树](https://leetcode-cn.com/problems/binary-tree-cameras/)
 
@@ -4470,6 +4462,165 @@ public:
             return 2;
         }
         return -1; //不会执行
+    }
+};
+```
+
+
+
+## 动态规划
+
+### 1.斐波那契数
+
+[509. 斐波那契数](https://leetcode-cn.com/problems/fibonacci-number/)
+
+```c++
+class Solution {
+public:
+    int fib(int n) {
+        if (n == 0) return 0;
+        if (n == 1) return 1;
+        return fib(n-1)+fib(n-2);
+    }
+};
+```
+
+### 2.爬楼梯
+
+[70. 爬楼梯](https://leetcode-cn.com/problems/climbing-stairs/)
+
+**注意：**这里都是只用到了前两个元素，所以可以进行空间的优化
+
+```c++
+class Solution {
+public:
+    int climbStairs(int n) {
+        int dp[n+2];
+        dp[1] = 1;
+        dp[2] = 2;
+        for(int i = 3; i <= n;i++){
+            dp[i] = dp[i-1] + dp[i-2]; 
+        }
+        return dp[n];
+    }
+};
+```
+
+### 3.使用最小花费爬楼梯
+
+[746. 使用最小花费爬楼梯](https://leetcode-cn.com/problems/min-cost-climbing-stairs/)
+
+这里要注意的是，到达楼梯顶的时候，是由dp[n]或者dp[n-1]两种情况的最小值是最小花费
+
+因为我们dp[i]表示从dp[i]向上需要的最小花费，初始化了dp[1] 与 dp[2]
+
+**注意：**这里都是只用到了前两个元素，所以可以进行空间的优化
+
+```c++
+class Solution {
+public:
+    int minCostClimbingStairs(vector<int>& cost) {
+        int n = cost.size();
+        int dp[n+2];
+        dp[1] = cost[0];
+        dp[2] = cost[1];
+        for(int i = 3;i <= n; i++)
+            dp[i] = min(dp[i-1] , dp[i-2]) + cost[i-1];
+        return min(dp[n],dp[n-1]);
+    }
+};
+```
+
+### 4.不同路径
+
+[62. 不同路径](https://leetcode-cn.com/problems/unique-paths/)
+
+值得注意的是【动态规划的空间降维版】
+
+- 在二维数组的遍历过程中，我们可以发现，实际上，在每一行的遍历过程中，我们只用到了当前行的前一个数据，以及上一行的当前列数据
+- 如果我们只用一个一维数组来表示每一行遍历的结果，也是可行的
+- 因为我们在求解dp[i]时候，dp[i-1]（同一行的前一个元素）已经求解，dp[i]（上一行的同一列）已经求解，并都还保存着。
+- 还有就是我们并没有优化时间复杂度，我们还是需要遍历整个二维空间，只是只需要一个一维数组来存储结果。
+
+【数论法】
+
+这里还有一种数论的解决方法，比较难以想到
+
+从起点到终点，必然要走过m+n-2次；而其中也必然有向下走过m-1次，所以一共有多少种走法就是m+n-2中取m-1，变成组合数问题
+
+时间复杂度为O(m)
+
+在代码实现时，为了防止溢出，所以我们在计算分子的时候，先除一下分母，一直除到分母不能除了为止，再下一次计算分子。
+
+```c++
+class Solution {
+public:
+    int uniquePaths(int m, int n) {
+        int dp[m+2][n+2];
+        for(int i = 1; i <= m; i++) {
+            dp[i][1] = 1;
+        }
+        for(int i = 1; i <=n; i++) {
+            dp[1][i] = 1;
+        }
+        for(int i = 2; i <= m;i ++) {
+            for(int j = 2; j <= n;j++){
+                dp[i][j] = dp[i-1][j] + dp[i][j-1];
+            }
+        }
+        return dp[m][n];
+    }
+};
+
+//优化版
+class Solution {
+public:
+    int uniquePaths(int m, int n) {
+        int dp[m][n];        
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i == 0 || j == 0)
+                    dp[i][j] = 1;
+                else {
+                    dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+                }
+            }
+        }
+        return dp[m - 1][n - 1]; 
+    }
+};
+
+//再优化-降维
+class Solution {
+public:
+    int uniquePaths(int m, int n) {
+        int dp[n+1];
+        for (int i = 0; i < n; i++) dp[i] = 1;
+        for(int i = 1; i < m;i++){
+            for(int j = 1; j < n; j++) {
+                dp[j] = dp[j-1] + dp[j];
+            }
+        }
+        return dp[n-1];
+    }
+};
+
+// 数论版
+class Solution {
+public:
+    int uniquePaths(int m, int n) {
+        long long fz = 1;
+        long long fm = m-1;
+        long long a = m+n-2;
+        long long b = m -1;
+        while(b--) {
+            fz = fz * (a--);
+            while(fm != 0 && fz % fm == 0) {
+                fz = fz / fm;
+                fm--;
+            }
+        }
+        return fz;
     }
 };
 ```
