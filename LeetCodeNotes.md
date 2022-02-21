@@ -4625,3 +4625,106 @@ public:
 };
 ```
 
+
+
+### 5.不同路径II
+
+[63. 不同路径 II](https://leetcode-cn.com/problems/unique-paths-ii/)
+
+相比于不同路径，这里多了障碍物
+
+我们在dp的过程中，遇到了障碍物就表明到达该节点的路径数量为0
+
+同时，一定要注意dp数组的初始化，包括置为0和初始几个数据的初始化
+
+```c++
+class Solution {
+public:
+    int dp[102][102];
+    int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {
+        int m = obstacleGrid.size();
+        int n = obstacleGrid[0].size();
+        for(int i =0 ;i < m;i++) {
+            if(obstacleGrid[i][0] != 1)
+                dp[i][0] = 1;
+            else break;
+        }
+        for(int i = 0; i<n;i++) {
+            if(obstacleGrid[0][i] != 1)
+                dp[0][i] = 1;
+            else break;
+        }
+        for(int i = 1; i<m;i++){
+            for(int j = 1; j < n;j++) {
+                if(obstacleGrid[i][j] == 1) {
+                    dp[i][j] = 0;
+                    continue;
+                }
+                dp[i][j] = dp[i-1][j] + dp[i][j-1];
+            }
+        }
+        return dp[m-1][n-1];
+    }
+};
+```
+
+### 6.整数拆分
+
+[343. 整数拆分](https://leetcode-cn.com/problems/integer-break/)
+
+这里主要是要理解dp[i]的含义，以及递推的公式
+
+dp[i]表示i这个数字的拆分后的最大乘积
+
+那么dp[i]怎么由前面的数据得到呢？
+
+i可以拆分为2部分 1~k, k+1~i  （k从1到i），这两部分的最大乘积为 k*{i-k} 与 k * dp[i-k]的最大值
+
+​	- 因为 k*{i-k} 就是拆分为2个数的情况，而 k * dp[i-k]就是k 乘上了 （i-k）所有的拆分方式里的最大值，也就是遍历了以k分割的所有情况
+
+然后拆分1~n里的每一个数，求出最大值即可
+
+```c++
+class Solution {
+public:
+    int integerBreak(int n) {
+        vector<int> dp(n+2);
+        dp[1] = 1;
+        dp[2] = 1;
+        for(int i = 2; i <= n; i++) {
+            for(int j = 1; j < i; j++) {
+                dp[i] = max(dp[i], max(j * (i-j), dp[i - j] * j));
+            }
+        }
+        return dp[n];
+
+    }
+};
+```
+
+### 7.不同的二叉搜索树
+
+[96. 不同的二叉搜索树](https://leetcode-cn.com/problems/unique-binary-search-trees/)
+
+首先这里是二叉搜索树，所以对于[1-n]这样的数组，当取i为root时，i左边的数据就是构成左子树，右边的数据就是构成右子树
+
+然后i为root的情况下，所有不同的二叉搜索树的数量就为 不同左子树的数量 * 不同右子树的数量
+
+然后这里还有一点要注意的就是 1,2,3构成的不同二叉搜索树的数量 和 2,3,4构成不同二叉树的数量是相同的。
+
+```
+class Solution {
+public:
+    int numTrees(int n) {
+        vector<int> dp(n+1,0);
+        dp[0] = 1;
+        for(int i = 1; i <= n;i++) {
+        	for(int j = 1; j <= i;j++) {
+        		dp[i] += dp[j-1] * dp[i-j];
+        	}
+        }
+        return dp[n];
+    }
+};
+```
+
