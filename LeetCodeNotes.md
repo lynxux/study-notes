@@ -4712,7 +4712,7 @@ public:
 
 然后这里还有一点要注意的就是 1,2,3构成的不同二叉搜索树的数量 和 2,3,4构成不同二叉树的数量是相同的。
 
-```
+```c++
 class Solution {
 public:
     int numTrees(int n) {
@@ -4724,6 +4724,150 @@ public:
         	}
         }
         return dp[n];
+    }
+};
+```
+
+### 8.分割等和子集
+
+[416. 分割等和子集](https://leetcode-cn.com/problems/partition-equal-subset-sum/)
+
+主要还是`dp[i][j]`或者`dp[i]`的含义问题，到底表示什么，然后递推公式是什么？
+
+这题是转化为类背包问题，即能否在最后一个元素找到部分前面的元素使得和为sum/2，如果能就意味着可以
+
+这里我们可以判断`dp[i][tempsum]`是否存在，则最后返回`dp[len-1][sum/2]`
+
+或者`dp[i][j]`表示前i个数中，最大和为j时，真正能取到的最大和是多少;那么我们最后就判断`dp[len-1][sum/2]`是否等于sum/2
+
+```c++
+class Solution {
+public:
+    bool canPartition(vector<int>& nums) {
+        int sum = 0;
+        for(int n: nums) sum+=n;
+        if(sum%2 != 0) return false;
+        vector<vector<int>> dp(nums.size()+1, vector<int>(sum/2+1, 0)); //dp[i][j] 表示0～i的数字中是否存在元素使得和为j
+        if(nums[0] <= sum / 2) dp[0][nums[0]] = 1;
+        for(int i = 1; i < nums.size();i ++) {
+            for(int j = 0; j <= sum/2; j++) {
+                dp[i][j] = dp[i-1][j] || (j-nums[i] >= 0 ? dp[i-1][j-nums[i]] : 0);
+            }
+        }
+        return dp[nums.size()-1][sum/2];
+    }
+};
+```
+
+### 9.最后一块石头的重量II
+
+[1049. 最后一块石头的重量 II](https://leetcode-cn.com/problems/last-stone-weight-ii/)
+
+这里也是类似的，要转化为类背包问题
+
+即把这些石头转化为2组，求这两组的最小差值；进一步的，转化为当最大背包容量为sum/2时，能装下的最大容量（此时价值等于容量）是多少？那就是一模一样的背包问题
+
+如果是sum/2,那就意味着最后的差值为0
+
+如果小于sum/2,那就意味着另一部分的和大于sum/2，差值为`sum - 2 * dp[i][sum/2]`
+
+【这种情况下，还能使用一维数组的优化】
+
+
+
+```c++
+class Solution {
+public:
+    int lastStoneWeightII(vector<int>& stones) {
+        int sum = 0;
+        for(int s : stones) sum += s;
+        vector<vector<int>> dp(stones.size()+1, vector<int>(sum/2+1, 0));
+        for(int i = 0; i < stones.size(); i++) {
+            for(int j = 0; j <= sum/2; j++) {
+                if(i == 0) {
+                    if (j >= stones[i]) dp[i][j] = stones[i];
+                }
+                else if(stones[i] > j) dp[i][j] = dp[i-1][j];
+                else dp[i][j] = max(dp[i-1][j], dp[i-1][j-stones[i]] + stones[i]);
+            }
+        }
+        return sum - 2 * dp[stones.size()-1][sum/2];
+    }
+};
+
+
+class Solution {
+public:
+    int lastStoneWeightII(vector<int>& stones) {
+        int sum = 0;
+        for (int s:stones) sum += s;
+        int len = stones.size();
+		//这里j是倒叙遍历，因为dp[j-stones]遍历的是之前的值，但是此时之前的值应该是没有更新过的（即i-1的，而不是i的）
+        vector<int> dp(sum/2+1);
+        for(int i =0; i < len; i++) {
+            for(int j = sum/2; j >= stones[i]; j--) {
+                dp[j] = max(dp[j], dp[j - stones[i]] + stones[i]);
+            }
+        }
+        return sum - 2 * dp[sum/2];
+    }
+};
+```
+
+
+
+### 目标和
+
+[494. 目标和](https://leetcode-cn.com/problems/target-sum/)
+
+dp的思路的是正确的，但是处理的还有有点细节没处理好
+
+`dp[i][j]`表示使用前i个数能得到和为j的等式的数量
+
+遍历的时候，由于target可能为负，所以偏移了sum
+
+这里要注意的是target > sum 或者 target < -sum是无解的；所以数组最大为2*sum
+
+```c++
+//dp
+class Solution {
+public:
+    int findTargetSumWays(vector<int>& nums, int target) {
+        int sum = 0;
+        for(int n: nums) sum += n;
+        int len = nums.size();
+        vector<vector<int>> dp(len+1, vector<int>(sum * 2 + 1, 0));
+        dp[0][sum + nums[0]] += 1;
+        dp[0][sum - nums[0]] += 1;
+        for(int i = 1;i < len; i++) {
+            for(int j = 0; j <= sum*2; j++) {
+                if( j >= nums[i]){
+                    dp[i][j] += dp[i-1][j-nums[i]];
+                }
+                if(j + nums[i] <= 2 * sum) {
+                    dp[i][j] += dp[i-1][j+nums[i]];
+                }
+            }
+        }
+        if(sum + target > 2 * sum || sum + target < 0) return 0;
+        return dp[len-1][target + sum];
+    }
+};
+
+// 回溯
+class Solution {
+public:
+    int res = 0;
+    int findTargetSumWays(vector<int>& nums, int S) {
+        if(nums.size() == 0) return 0;
+        int len = nums.size();
+        return DFS(nums,0,0,S);
+        //return res;
+    }
+    int  DFS(vector<int>& nums,int n,int sum,int S){
+        if(n == nums.size())
+            return (sum == S)?1:0;
+        return DFS(nums,n+1,sum + nums[n],S) + DFS(nums,n+1,sum - nums[n],S);
     }
 };
 ```
