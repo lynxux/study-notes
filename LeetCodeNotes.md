@@ -4816,7 +4816,7 @@ public:
 
 
 
-### 目标和
+### 10.目标和
 
 [494. 目标和](https://leetcode-cn.com/problems/target-sum/)
 
