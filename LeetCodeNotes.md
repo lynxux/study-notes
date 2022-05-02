@@ -1225,7 +1225,7 @@ public:
 };
 ```
 
-### 7.前 K 个高频元素
+### 7.前K个高频元素
 
 [347. 前 K 个高频元素](https://leetcode-cn.com/problems/top-k-frequent-elements/)
 
@@ -1335,8 +1335,6 @@ public:
 };
 ```
 
-
-
 ### 2.二叉树的迭代遍历*
 
 [144. 二叉树的前序遍历](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
@@ -1434,23 +1432,24 @@ vector<int> postorderTraversal(TreeNode* root) {
     TreeNode * cur = root;
     TreeNode *pre = nullptr;
     if (root == nullptr) return res;
-    while(!st.empty() || cur != nullptr){
+    while(!st.empty() || cur != nullptr) {
         while(cur != nullptr) {
             st.push(cur);
             cur = cur->left;
         }
         cur = st.top();
-        if(cur -> right && cur->right != pre) cur = cur->right;
-        else{
+        if(cur -> right && cur->right != pre) 
+            cur = cur->right;
+        else {
             st.pop();
             res.push_back(cur->val);
             pre = cur;
             cur = nullptr;
         }
-
     }
     return res;
 }
+
 //迭代法-后序2
 vector<int> postorderTraversal(TreeNode* root) {
     vector<int> res;
