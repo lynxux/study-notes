@@ -3,6 +3,7 @@
 [206. 反转链表](https://leetcode-cn.com/problems/reverse-linked-list/)
 
 ```c++
+//迭代
 class Solution {
 public:
     ListNode* reverseList(ListNode* head) {
@@ -16,6 +17,27 @@ public:
             fast = temp; 
         }
         return slow;
+    }
+};
+
+//递归
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        if(head == nullptr || head->next == nullptr) return head;
+        ListNode *p = nullptr;
+        ListNode *q = head;
+
+        return re(p,q);
+    }
+
+    ListNode *re(ListNode *pre, ListNode *cur) {
+        if(cur == nullptr) return pre;
+        ListNode *tmp = cur->next;
+        cur->next = pre;
+        pre = cur;
+        cur = tmp;
+        return re(pre, cur);
     }
 };
 ```
@@ -80,7 +102,7 @@ public:
         int res =  0;
         vector<int> cnt(128,0);
         for(int i = 0; i<s.size(); i++) {
-            start = max(start, cnt[s[i]]);
+            start = max(start, cnt[s[i]]);  // 注意这里，要取两者的最大值
             cnt[s[i]] = i+1;
             res = max(res, i -start + 1);
         }
@@ -101,34 +123,33 @@ public:
 //快排版
 class Solution {
 public:
-    int res = 0;
     int findKthLargest(vector<int>& nums, int k) {
-        // 快排或者并归排序
-        return qs(nums, 0 ,nums.size() -1, k);
-
+        // 快排或者堆排序
+        // 快排 -- 从大到小排序
+        return quicksort(nums, 0 , nums.size()-1, k-1);
     }
-    //quicksort
-    int qs(vector<int> &nums, int left, int right, int k) {
-        int p = part(nums, left, right);
-        int m = right - p + 1;
-        if(m == k) {
-            return nums[p];
-        }
-        if(m < k) {
-            return qs(nums, left, p-1, k - m);
+    int quicksort(vector<int> &nums, int left, int right, int k) {
+        int index = part(nums, left, right);
+        if(index == k) {
+            return nums[index];
+        }else if (index > k) {
+            return quicksort(nums, left, index-1, k);   // 要在这里返回
         }else {
-            return qs(nums, p+1, right, k);
+            return quicksort(nums, index+1, right, k);
         }
+        // return nums[index];  这样不行
     }
+
     int part(vector<int> &nums, int left, int right) {
-        int temp = nums[left];
-        while(left<right){
-            while(left<right&&nums[right]>=temp) right--;
-            nums[left]= nums[right];
-            while(left<right&&nums[left]<=temp) left++;
-            nums[right]= nums[left];
+        int x = nums[left];
+        while(left < right) {
+            while(left < right && nums[right] <= x) right--;
+            nums[left] = nums[right];    // 要这样写
+            while(left < right && nums[left] > x) left++;
+            nums[right] = nums[left];
+            // if(left < right) swap(nums[left], nums[right]);   这种不行
         }
-        nums[left] = temp;
+        nums[left] = x;
         return left;
     }
 };
@@ -136,32 +157,28 @@ public:
 //堆排序
 class Solution {
 public:
-    int len;
     int findKthLargest(vector<int>& nums, int k) {
-        len = nums.size();
-        int temp = nums[len-1];
-        for(int i = len - 1;  i >= 1; i --) {
-            nums[i] = nums[i-1];
+        // 快排or堆排
+        // 堆排，可以直接使用大顶堆
+        int len = nums.size();
+        for(int i = len/2; i >=0 ;i--) {
+            down(i, len, nums);
         }
-        nums.push_back(temp);
-        for(int i = len/2; i; i--) {
-            down(i,nums);
+
+        for(int i = 0;i < k-1;i++) {
+            swap(nums[0], nums[len-i-1]);
+            down(0, len - i - 1, nums);
         }
-        int res = 0;
-        while(k--){
-            res = nums[1];
-            nums[1] = nums[len--];
-            down(1,nums);
-        }
-        return res;
+        return nums[0];
     }
-    void down(int x, vector<int> &nums) {
+
+    void down(int x, int len, vector<int> &nums) {
         int t = x;
-        if(x * 2 <= len && nums[x*2] > nums[t]) t = x *2;
-        if(x * 2+ 1 <= len && nums[x*2+1] > nums[t])  t=x*2+1;
-        if(t != x){
+        if(x*2+1 < len && nums[t] < nums[x*2+1]) t=x*2+1;
+        if(x*2+2 < len && nums[t] < nums[x*2+2]) t=x*2+2;
+        if(t != x) {
             swap(nums[t],nums[x]);
-            down(t, nums);
+            down(t, len, nums);
         }
     }
 };
@@ -3594,4 +3611,585 @@ public:
 ### 86. 寻找旋转排序数组中的最小值
 
 [153. 寻找旋转排序数组中的最小值](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array/)
+
+是二分，但是是变形的二分
+
+因为这里没有target，所以nums[mid]要和谁进行比较呢？
+
+是mid+1， mid-1
+
+还是l， r呢？？？
+
+```c++
+class Solution {
+public:
+    int findMin(vector<int>& nums) {
+        int len = nums.size();
+        int l = 0;
+        int r = len - 1;
+        while(l < r) {
+            int mid = (l+r) /2;
+            if(nums[mid] < nums[r]) {  // 这里是和r进行比较
+                r = mid;
+            }else {
+                l = mid + 1;
+            }
+        }
+        return nums[l];
+    }
+};
+```
+
+
+
+### 87. 岛屿的最大面积
+
+最直接的思路就是dfs，遍历这个岛屿，求出每一块的面积
+
+也可以使用并查集，但是要做一些改动，具体的改动包括：
+
+- 在进行集合合并的时候，要记录当前集合的面积（集合中结点的数量）
+    - 具体的记录方式，我们可以使用：把二位的坐标换算成一维的，然后每合并一个结点，就向父节点（坐标更大的结点）累加
+
+```c++
+// dfs
+class Solution {
+public:
+    int m,n,a;
+    int maxAreaOfIsland(vector<vector<int>>& grid) {
+        if(grid.size() == 0) return 0;
+         m = grid.size();
+         n = grid[0].size();
+        int res = 0;
+        for(int i = 0;i <m;i++ ) {
+            for (int j = 0;j < n;j++) {
+                if(grid[i][j] == 1) {
+                    a = 0;
+                    dfs(grid, i, j);
+                    res = max(res, a);
+                }
+            }
+        }
+        return res;
+    }
+    void dfs(vector<vector<int>> &grid, int x, int y) {
+        if(x < 0 || y < 0 || x >= m || y >= n || grid[x][y] == 0) 
+            return;
+        a++;
+        grid[x][y] = 0;
+        dfs(grid, x, y+1);
+        dfs(grid, x+1, y);
+        dfs(grid, x-1, y);
+        dfs(grid, x, y-1);
+    }
+};
+```
+
+
+
+### 88. 字符串解码
+
+[394. 字符串解码](https://leetcode-cn.com/problems/decode-string/)
+
+```c++
+class Solution {
+public:
+    string decodeString(string s) {
+        int i = 0;
+        string res = decode(s, i);
+        return res;
+    }
+    string decode(string &s, int &pos) {
+        string t = "";
+        int num = 0;
+        int len = s.size();
+        while(pos < len) {
+            if(s[pos] == ']') {
+                pos++;
+                return t; 
+            }else if(s[pos] <= '9' && s[pos] >= '0') {
+                num = num * 10 + (s[pos] - '0');
+                pos++;
+            }else if(s[pos] == '[') {
+                pos++;
+                string cur = decode(s,pos);
+                while(num--) {
+                    t += cur;
+                }
+                // pos++;
+                num = 0;   // 这个很重要！！！！！！
+            }else { // abcdefg
+                t += s[pos];
+                pos++;
+            }
+        }
+        return t;
+    }
+};
+```
+
+### 89. 排序数组-堆排
+
+[912. 排序数组](https://leetcode-cn.com/problems/sort-an-array/)
+
+这里使用的堆排序-升序
+
+这里和一般的堆排序的模板不同，因为是在原数组上对数据排序，而不是直接把数据输出
+
+所以我们采用的先生成大顶堆，然后每次把当前长度内的最大值放到当前长度的最后一个位置，然后重新调整堆
+
+```c++
+class Solution {
+public:
+    vector<int> sortArray(vector<int>& nums) {
+        int len = nums.size();
+        for(int i = len/2; i >= 0;i--) {
+            down(nums, i, len);
+        }
+        for(int i = len-1;i >= 0;i--) {
+            swap(nums[0], nums[i]);
+            down(nums, 0, i);
+        }
+        return nums;
+    }
+    void down(vector<int> &nums, int x, int len) {
+        int t = x;
+        if(x*2 + 1 < len && nums[t] < nums[x*2+1]) {
+            t = x*2+1;
+        }
+        if(x * 2+2 < len&& nums[t] < nums[x*2+2]) {
+            t = x*2+2;
+        }
+        if(t != x) {
+            swap(nums[t], nums[x]);
+            down(nums, t, len);
+        }
+    }
+};
+```
+
+### 90. 两两交换链表中的结点
+
+[24. 两两交换链表中的节点](https://leetcode-cn.com/problems/swap-nodes-in-pairs/)
+
+```c++
+class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) {
+        head = swapTwo(head);
+        return head;
+    }
+
+    ListNode* swapTwo(ListNode *head) {
+        if(head == nullptr) return head;
+        ListNode *p = head;
+        ListNode *q = head->next;
+        if(q == nullptr) return p;
+        ListNode *temp = q->next;
+        q->next = p;
+        p->next=swapTwo(temp);
+        return q;
+    }
+};
+```
+
+### 91. 基本计算器II
+
+[227. 基本计算器 II](https://leetcode-cn.com/problems/basic-calculator-ii/)
+
+在最前面加一个+，每次记录s[i]的前一个运算符
+
+- 当s[i]是运算符的时候对前一个运算符进行运算（*/），加减法都直接入栈（减法入栈负数即可）
+    - 这里还有就是当时最后一个字符的时候也要对前面的运算符进行运算
+
+- 当s[i]是数字的时候记录数字
+
+最后计算栈中的数字就好（都是加法）
+
+```c++
+class Solution {
+public:
+    int calculate(string s) {
+        char pre = '+';
+        int num = 0;
+        stack<int> st;
+
+        int index = 0;
+        int len = s.size();
+
+        for(int i = 0;i < len;i++) {
+            if(s[i] <= '9' && s[i] >= '0') {
+                num = num * 10 + (s[i]-'0');
+            }
+            if((s[i]=='*' || s[i] == '/' || s[i] == '+' || s[i] == '-') || i == len - 1){ // ！！！
+                if(pre == '+') {
+                    st.push(num);
+                }else if(pre == '-') {
+                    st.push(-num);
+                }else {
+                    int temp = pre == '*' ? st.top() * num : st.top() / num;
+                    st.pop();
+                    st.push(temp);
+                }
+                pre = s[i];
+                num = 0;
+            }
+        }
+        int res = 0;
+         while(!st.empty()) {
+            res += st.top();
+            st.pop();
+        }
+        return res;
+    }
+}; 
+```
+
+
+
+### 92. 乘积最大子数组
+
+[152. 乘积最大子数组](https://leetcode-cn.com/problems/maximum-product-subarray/)
+
+```c++
+class Solution {
+public:
+    int maxProduct(vector<int>& nums) {
+        int len = nums.size();
+        int res=nums[0];
+        vector<int> mindp(len, 0);
+        vector<int> maxdp(len,0);
+        mindp[0] = nums[0];
+        maxdp[0] = nums[0];
+
+        for(int i = 1; i < len;i++) {
+            if(nums[i] < 0) {
+                mindp[i] = min(nums[i], maxdp[i-1] * nums[i]);
+                maxdp[i] = mindp[i-1] * nums[i];
+            }else {
+                mindp[i] = mindp[i-1] * nums[i];
+                maxdp[i] = max(maxdp[i-1] * nums[i], nums[i]);
+            }
+            res=max(res, maxdp[i]);
+        }
+        return res;
+    }
+};
+```
+
+
+
+### 93. 二叉树最大宽度
+
+[662. 二叉树最大宽度](https://leetcode-cn.com/problems/maximum-width-of-binary-tree/)
+
+这题主要是要计算空结点，就是说是计算当前层的最右边节点和最左边节点的距离差（包含两个节点之间的空结点）
+
+使用的方法是利用完全二叉树的下标的性质，当前结点的index=父节点的index*2（+1）
+
+为了防止溢出，可以减去上层的第一个结点的index，即为start（或者start*2也可以）
+
+最后计算差值即可
+
+```c++
+class Solution {
+public:
+    int widthOfBinaryTree(TreeNode* root) {
+        if(root == nullptr) return 0;
+        queue<pair<TreeNode*,long long>> q;
+        q.push({root,1});
+        long long res = 0;
+        while(!q.empty()) {
+            int len = q.size();
+            long long start = q.front().second;
+            long long index = 0;
+            while(len--) {
+                TreeNode *node = q.front().first;
+                index = q.front().second;
+                q.pop();
+                if(node->left) {
+                    q.push({node->left, (long long)index * 2  - start});
+                }
+                if(node->right){
+                    q.push({node->right, (long long)index * 2 + 1 - start});
+                }
+            }
+            res = max((int)res, (int)(index - start + 1));
+        }
+        return res;
+        
+    }
+};
+```
+
+### 94. 只出现一次的数字
+
+[136. 只出现一次的数字](https://leetcode-cn.com/problems/single-number/)
+
+```c++
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        // 时间O(n), 空间O(1)
+        // 使用异或实现
+        int res = 0;
+        for(auto n:nums) {
+            res = res ^ n;
+        }
+        return res;
+    }
+};
+```
+
+### 95. 验证IP地址
+
+ [468. 验证IP地址](https://leetcode-cn.com/problems/validate-ip-address/)
+
+注意过滤前缀0的方式
+
+```c++
+class Solution {
+public:
+    string validIPAddress(string queryIP) {
+        if (isIPv4(queryIP)) {
+            return "IPv4";
+        } else if (isIPv6(queryIP)) {
+            return "IPv6";
+        } else {
+            return "Neither";
+        }
+    }
+    bool isIPv4(string ip) {
+        int num = 0;
+        char pre;
+        int cnt = 0;
+        int len = ip.size();
+        int i = 0;
+        while(i < len) {
+            if(ip[i] <= '9' && ip[i] >= '0') {
+                if(pre == '0' && num == 0) return false;   // 前缀0的过滤方式
+                num = num * 10 + (ip[i]-'0');
+                if(num > 255 || num < 0) return false;
+                pre = ip[i];
+            }
+            else if(ip[i] == '.') {
+                if(pre == '.') return false;
+                pre = ip[i];
+                num = 0;
+                cnt++;
+            }else {
+                return false;
+            }
+            i++;
+        }
+        cnt++;
+        if(pre == '.') return false;
+        if(cnt != 4) return false;
+        if(num > 255 || num < 0) return false;
+        return true;
+    }
+
+    bool isIPv6(string ip) {
+        char pre;
+        int cnt = 0;
+        int perlen = 0;
+        int len = ip.size();
+        int i = 0;
+        while(i < len) {
+            if((ip[i] <= '9' && ip[i] >= '0') || (ip[i] <= 'f' && ip[i] >= 'a') || (ip[i] <= 'F' && ip[i] >= 'A')) {
+                perlen++;
+                pre = ip[i];
+            }
+            else if(ip[i] == ':') {
+                if(perlen > 4) return false;
+                if(pre == ':') return false;
+                pre = ip[i];
+                perlen = 0;
+                cnt ++;
+            }else {
+                return false;
+            }
+            i++;
+        }
+        cnt++;
+        if(cnt != 8) return false;
+        if(pre == ':') return false;
+        if(perlen > 4) return false;
+        return true;
+    }
+};
+```
+
+
+
+### 96. 买卖股票的最佳时机II
+
+[122. 买卖股票的最佳时机 II](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/)
+
+```c++
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int res = 0;
+        for(int i = 0; i < prices.size()-1;i++) {
+            if(prices[i+1] > prices[i]) {
+                res += prices[i+1] - prices[i];
+            }
+        }
+        return res;
+    }
+};
+```
+
+ 
+
+### 97. 打家劫舍
+
+[198. 打家劫舍](https://leetcode-cn.com/problems/house-robber/)
+
+dp[i]表示当前偷用户时的最大收益
+
+可以由前一个用户未被偷 以及 前两个用户被偷+当前收益 这两种状态转移而来
+
+注意，由且仅由
+
+还有一点就是初始化问题，就是dp[1] = max(nums[0], nums[1])
+
+```c++
+class Solution {
+public:
+    int rob(vector<int>& nums) {
+        int len = nums.size();
+        if(len == 1) return nums[0];
+        vector<int> dp(len+1, 0);
+        dp[0] = nums[0];
+        dp[1] = max(nums[0], nums[1]);
+        for(int i = 2;i < len;i++) {
+            dp[i] = max(dp[i-1] ,dp[i-2] + nums[i]);
+        }
+        return max(dp[len-1], dp[len-2]);
+    }
+};
+```
+
+### 98. 二叉搜索树与双向链表
+
+[剑指 Offer 36. 二叉搜索树与双向链表](https://leetcode-cn.com/problems/er-cha-sou-suo-shu-yu-shuang-xiang-lian-biao-lcof/)
+
+这里是按照中序遍历的结果进行双向链表的处理
+
+我们按照中序遍历进行处理
+
+对于中序遍历中的每个结点，我们处理它和它前一个结点(pre)的双向关系，即pre的right和当前root的left即可
+
+我们需要记录pre结点，遍历结束时pre为最后一个节点，因此我们还需要记录第一个节点head（中序遍历当pre为空时root即为第一个结点）
+
+然后在遍历完成之后处理第一个和最后一个结点的关系
+
+```c++
+class Solution {
+public:
+    Node *pre;
+    Node *head;
+    Node* treeToDoublyList(Node* root) {
+        if(root == NULL) return NULL;
+        dfs(root);
+        head->left = pre;
+        pre->right = head;
+        return head;
+    }
+    void dfs(Node *root) {
+        if(root == NULL) return;
+        dfs(root->left);
+        if(pre != NULL) {
+            pre->right = root;
+        }else {
+            head = root;
+        }
+        root->left = pre;
+        pre = root;
+        dfs(root->right);
+    }
+};
+```
+
+
+
+### 99. 复制带随机指针的链表
+
+[138. 复制带随机指针的链表](https://leetcode-cn.com/problems/copy-list-with-random-pointer/)
+
+[一] 可以使用map记录当前节点和随机结点的映射关系
+
+[二] 在每个节点后面新建一个节点，这样先处理next关系，再处理random关系，最后分离两个链表即可
+
+```c++
+class Solution {
+public:
+    Node* copyRandomList(Node* head) {
+        if(head == NULL) return NULL;
+
+        Node *p = head;
+        while(p) {
+            Node *temp = new Node(p->val);
+            temp->next = p->next;
+            p->next = temp;
+            p = p->next->next;
+        }
+
+        p = head;
+        while(p) {
+            if(p->random == NULL) {
+                p->next->random = NULL;
+            }
+            else p->next->random = p->random->next;
+            p = p->next->next;
+        }
+
+        Node *newhead = head->next;
+        p = head;
+        // Node *q = newhead;
+        while(p) {
+            // if(p->next != NULL)
+            //     p->next = p->next->next;
+            // if(q->next != NULL)
+            //     q->next = q->next->next;
+            // p = p->next;
+            // q = q->next;
+            Node *tmp = p->next;
+            if(tmp)
+                p->next = tmp->next;
+            p = tmp;
+        }
+        return newhead;
+    }
+};
+```
+
+### 100. 最大数
+
+[179. 最大数](https://leetcode-cn.com/problems/largest-number/)
+
+主要是怎么比较两个数组？正确的比较方式就是a+b 和 b+a 拼接之后进行比较
+
+```c++
+class Solution {
+public:
+    static bool cmp (int a,int b) {
+        string sa = to_string(a);
+        string sb = to_string(b);
+        return sa + sb > sb + sa;
+    }
+    string largestNumber(vector<int>& nums) {
+        sort(nums.begin(), nums.end(), cmp);
+        string res = "";
+        for(auto n : nums) {
+            string t = to_string(n);
+            if(n == 0 && res[0] == '0') continue;
+            res += t;
+        }
+        return res;
+    }
+};
+```
 
