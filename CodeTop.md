@@ -1,3 +1,5 @@
+[TOC]
+
 ### 1. 反转链表
 
 [206. 反转链表](https://leetcode-cn.com/problems/reverse-linked-list/)
@@ -4038,10 +4040,8 @@ public:
         }
         return res;
     }
-};
+}; 
 ```
-
- 
 
 ### 97. 打家劫舍
 
@@ -4191,5 +4191,83 @@ public:
         return res;
     }
 };
+```
+
+### 101.  二叉树的序列化与反序列化
+
+[297. 二叉树的序列化与反序列化](https://leetcode.cn/problems/serialize-and-deserialize-binary-tree/)
+
+首先最容易想到的其实是，用前序+中序序列这种方法，但是问题是这种方法的节点值不能重复，所以不能使用这种方法。
+
+
+
+```c++
+class Codec {
+public:
+    // Encodes a tree to a single string.
+    string serialize(TreeNode* root) {
+        string res = "";
+        queue<TreeNode*> q;
+        q.push(root);
+        while(!q.empty()) {
+            auto cur = q.front();
+            q.pop();
+            if(cur != NULL) {
+                res += to_string(cur->val);
+                res += " ";
+                q.push(cur->left);
+                q.push(cur->right);
+            }else {
+                res += "n ";
+            }
+        }
+        cout << res << endl;
+        return res;
+    }
+
+    // Decodes your encoded data to tree.
+    TreeNode* deserialize(string data) {
+        stringstream ss;
+        ss.str(data);
+        string s;
+        ss >> s;
+        if(s == "n") {
+            return nullptr;
+        }
+        TreeNode *root = new TreeNode(stoi(s));
+        queue<TreeNode *>q;
+        q.push(root);
+        while(!q.empty()) {
+            int curlen = q.size();
+            while(curlen --) {
+                TreeNode *left, *right, *node;
+                node = q.front();
+                q.pop();
+                ss >> s;
+                if(s == "n") {
+                    left = nullptr;
+                }else {
+                    left = new TreeNode(stoi(s));
+                    q.push(left);
+                }
+                node->left = left;
+                ss >> s;
+                 if(s == "n") {
+                    right = nullptr;
+                }else {
+                    right = new TreeNode(stoi(s));
+                    q.push(right);
+                }
+                node->right = right;
+            }
+        }
+
+        return root;
+    }
+};
+
+// Your Codec object will be instantiated and called as such:
+// Codec ser, deser;
+// TreeNode* ans = deser.deserialize(ser.serialize(root));
 ```
 
